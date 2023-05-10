@@ -9,6 +9,7 @@
 
 using namespace std;
 
+//TODO:
 void MST::generateGraph() {
     srand(time(NULL));
 
@@ -64,7 +65,8 @@ void MST::generateGraph() {
     // TODO: dokonczyc i przeanalizowac dzialanie algorytmu
 
 }
-// skonczone
+
+//git
 void MST::generateGraphFromFile() {
 
     string fileName;
@@ -121,7 +123,6 @@ void MST::generateGraphFromFile() {
     }
 }
 
-
 //git
 void MST::printMatrix() {
 
@@ -164,12 +165,10 @@ void MST::printAdjacencyList() {
     cout<<endl<<endl;
 }
 
+//git
 void MST::prim_matrix(){
-    // wybieram jeden wierzcholek
 
-
-
-//  WCZYTYWANIE DO KOLEJKI Z MACIERZY
+///  WCZYTYWANIE DO KOLEJKI Z MACIERZY
     Queue *pq = new Queue();
     for(int i = 0; i < numOfVertices; i++){
         for(int j = 0; j < i; j++){
@@ -182,13 +181,42 @@ void MST::prim_matrix(){
             }
         }
     }
-    pq->print();
+/// PRZYGOTOWYWANIE TABLICY DO SPRAWDZANIA PĘTLI W GRAFIE - DISJOINT SETS
+    int* parent = new int[numOfVertices];
+    fill(parent, parent + numOfVertices, -1);
 
+/// WYBIERANIE POCZĄTKOWEGO WIERZCHOŁKA OD KTÓREGO ZACZYNA SIE ALGORYTM (NA BAZIE KRAWĘDZI O NAJMNIEJSZEJ WADZE)
+    Queue::Node* firstNode = pq->head;                                       // losowa krawędzi
+    int parent1 = findParent(firstNode->data.v1, parent);              // szukam korzenia poddrzewa, do którego należy v1
+    int parent2 = findParent(firstNode->data.v2, parent);              // szukam korzenia poddrzewa, do którego należy v2
+    unionSets(parent1, parent2, parent);                              // pierwszy set, parent2 będzie rodzicem całości
+    int permParent = parent2;                                                // permParent to rodzic naszego poddrzewa rozpinającego
+    cout << "Edge: " << firstNode->data.v1 << " - " << firstNode->data.v2 << ", weight: " << firstNode->data.weight <<endl;
 
+    /// GŁOWNA CZEŚĆ FUNKCJI,
+    for(int i = 1; i < numOfVertices - 1; i++){                             // wyszukiwanie określonej liczby krawędzi
+        Queue::Node* currentNode = pq->head;
+        while(currentNode != nullptr){                                      // znalezienie najmniejszej krawędzi, która nam pasuje
+            parent1 = findParent(currentNode->data.v1, parent);       //szukam korzenia poddrzewa, do którego należy v1
+            parent2 = findParent(currentNode->data.v2, parent);       //szukam korzenia poddrzewa, do którego należy v2
 
-
+            if(parent1 != parent2 && (parent2 == permParent || parent1 == permParent )){            //sprawdza, nie ma pętli i czy krawedz jest sasiadujaca z drzewem co mam do tej pory
+                cout << "Edge: " << currentNode->data.v1 << " - " << currentNode->data.v2 << ", weight: " << currentNode->data.weight <<endl;
+                unionSets( parent1, parent2, parent);
+                break;
+            }
+            currentNode  = currentNode -> next;
+        }
+    }
 }
 
+//TODO:
+void MST::prim_list() {
+
+    // Zamiana listy na kolejkę, reszta analogicznie
+}
+
+//git
 void MST::kruskal_matrix() {
     int connected[numOfVertices];
 
@@ -252,6 +280,17 @@ void MST::kruskal_matrix() {
 
     delete[] parent;                   // usuwam tablice, bo nie bedzie juz potrzebna
 }
+
+//TODO:
+void MST::kruskal_list() {
+
+    //TODO: zamiana listy na kolejkę
+
+
+    // TU ten sam algorytm co w macierzowym kruskalu
+}
+
+
 
 /*
 UTIL FUNCTIONS
