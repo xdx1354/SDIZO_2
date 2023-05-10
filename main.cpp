@@ -14,4 +14,6 @@ int main() {
     MST mst = * new MST();
     mst.generateGraphFromFile();
     mst.printMatrix();
+//    mst.printAdjacencyList();
+   mst.prim_matrix();
 }

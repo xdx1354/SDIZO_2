@@ -1,1 +1,15 @@
 W obecnej implementacji brak krawedzi miedzy wierzcholkami to 0.
+Pamietac o tym, że krawędzie są traktowane jako nieskierowane w MST,
+ale w reszcie należy to uwzględnić.
+
+
+Chyba najlatwiejsza i najlepsza bedzie realizacja priority queue jako
+linked listy.
+
+
+TODO:
+    - priority queue jako linked lista
+    - algorytm Prim macierz
+    - algorytm Prim lista
+    - algorytm Kruskala macierz
+    - algorytm Kruskala lista

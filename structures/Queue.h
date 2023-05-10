@@ -7,22 +7,35 @@
 
 
 class Queue {
-    Queue(int n);
     ~Queue();
 
+
+
+
+
+
+public:
     struct Edge{
         int v1, v2, weight;             // v1- starting vertex, v2- ending vertex
+        Edge *next = nullptr;
     };
 
-private:
-    Edge *heap;
-    int pos;
-public:
-    void createQueue(int n);        //TODO: czy nie powinno zwracac obiektu?
-    void deleteQueue();
-    Edge root();
+    struct Node {
+        Edge data;
+        Node* next;
+    };
+
+    Node* head;
+
+
     void insert(Edge e);
     void deleteFromBeginning();
+    void print();
+
+    Queue(){
+        head = nullptr;
+    };
+
 };
 
 

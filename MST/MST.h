@@ -9,15 +9,20 @@
 class MST {
 public:
 
-    struct AdjacencyList{
-        AdjacencyList *next;
+    struct AdjNode{
+        AdjNode *next;
         int neighbour;
         int weight;
     };
 
+    struct Edge{
+        int v1, v2, weight;             // v1- starting vertex, v2- ending vertex
+        Edge *next = nullptr;
+    };
 
-    AdjacencyList **neighbours;
-    AdjacencyList *p;                   //temp list ??
+
+    AdjNode **adjList;
+    AdjNode *p;                   //temp list ??
 
     int **graph;
     int numOfEdges, numOfVertexes, pos;

@@ -3,6 +3,7 @@
 //
 
 #include "MST.h"
+#include "../structures/Queue.h"
 #include<iostream>
 #include <bits/stdc++.h>
 
@@ -11,7 +12,7 @@ using namespace std;
 void MST::generateGraph() {
     srand(time(NULL));
 
-    neighbours = new AdjacencyList *[numOfEdges * (numOfVertexes-1)/2];
+    adjList = new AdjNode *[numOfEdges * (numOfVertexes - 1) / 2];
     int v1, v2, weight;
     int idFromGraph, idOutside;
 
@@ -19,7 +20,7 @@ void MST::generateGraph() {
 
     for(int i =0; i< numOfVertexes; i++){
         graph[i] = new int [numOfVertexes];             // Tworzenie dwuwymiarowej tablicy
-        neighbours[i] = NULL;
+        adjList[i] = NULL;
         for(int j =0; j< numOfVertexes; j++){
             graph [i][j] = 0;                           // ustawiam w macierzy na brak relacji pomiedzy wierzcholkami
         }
@@ -47,17 +48,17 @@ void MST::generateGraph() {
         graph[v1][v2] = weight;
         graph[v2][v1] = weight;                             // dopisywanie wagi do macierzy sąsiedzctw
 
-        p = new AdjacencyList;                              //dopisywanie v1
+        p = new AdjNode;                              //dopisywanie v1
         p -> neighbour = v2;
-        p -> next = neighbours[v1];
+        p -> next = adjList[v1];
         p -> weight = weight;
-        neighbours[v1] = p;
+        adjList[v1] = p;
 
-        p = new AdjacencyList;                              //dopisywanie v1
+        p = new AdjNode;                              //dopisywanie v1
         p -> neighbour = v1;
-        p -> next = neighbours[v2];
+        p -> next = adjList[v2];
         p -> weight = weight;
-        neighbours[v2] = p;
+        adjList[v2] = p;
     }
 
     // TODO: dokonczyc i przeanalizowac dzialanie algorytmu
@@ -81,14 +82,14 @@ void MST::generateGraphFromFile() {
     fin.open(fileName.c_str(), ios::in);        // TODO: sprawdzic jak dziala dokladnie ten tryb
     fin >> numOfEdges >> numOfVertexes;                 // wczytuje liczbe krawedzi i wierzcholkow do pola klasy
 
-    neighbours = new AdjacencyList * [numOfVertexes];
+    adjList = new AdjNode * [numOfVertexes];
 
     graph = new int *[numOfVertexes];
 
     // TWORZE STRUKTURY I WYPELNIAM JE PUSTYMI WARTOSCIAMI
     for(int i =0; i< numOfVertexes; i++){
         graph[i] = new int [numOfVertexes];             // Tworzenie dwuwymiarowej tablicy - dokladanie drugiego wymiaru
-        neighbours[i] = NULL;
+        adjList[i] = NULL;
         for(int j =0; j< numOfVertexes; j++){
             graph [i][j] = 0;                           // ustawiam w macierzy na brak relacji pomiedzy wierzcholkami
         }
@@ -101,17 +102,17 @@ void MST::generateGraphFromFile() {
     for(int i = 0; i < numOfEdges; i++){
         fin >> v1 >> v2 >> weight;
 
-        p = new AdjacencyList;                          // nowy element listy sasiadow - wierzcholek v1
+        p = new AdjNode;                          // nowy element listy sasiadow - wierzcholek v1
         p -> neighbour = v2;                            // jego sasiadame jest wierzcholek v2
-        p -> next = neighbours[v1];                     // nastepny po nim jest ten element co byl pierwszy dotychczas
+        p -> next = adjList[v1];                     // nastepny po nim jest ten element co byl pierwszy dotychczas
         p -> weight = weight;                           // ustawiam wage
-        neighbours [v1] = p;                            // wstawiam na pierwsze miejsce tzn, ze w neighbours[] bedzie teraz wskaznik na niego
+        adjList [v1] = p;                            // wstawiam na pierwsze miejsce tzn, ze w adjList[] bedzie teraz wskaznik na niego
 
-        p = new AdjacencyList;                          // analogicznie tworze relacje dla v2
+        p = new AdjNode;                          // analogicznie tworze relacje dla v2
         p -> neighbour = v1;
-        p -> next = neighbours[v2];
+        p -> next = adjList[v2];
         p -> weight = weight;
-        neighbours[v2] = p;
+        adjList[v2] = p;
 
         // wpisuje wage w pola macierzy sasiedzctw
         graph[v1][v2] = weight;
@@ -124,7 +125,7 @@ void MST::generateGraphFromFile() {
 //git
 void MST::printMatrix() {
 
-    cout<<endl;
+    cout<<endl<<"ADJACENCY MATRIX"<<endl;
     cout << setw(6) << " ";
     for(int i = 0; i < numOfVertexes; i++){
         cout << setw(6) << i;                               // drukowanie numerow kolumn
@@ -147,6 +148,43 @@ void MST::printMatrix() {
 
 }
 
+//git
 void MST::printAdjacencyList() {
+
+    cout<<endl<<"ADJACENCY LIST"<<endl;
+    cout<< "ID_OF_VERTEX:  ID_OF_VERTEX <WEIGHT_OF_EDGE>";
+    for(int i = 0; i < numOfVertexes; i++){
+        cout<<endl<< i << ": ";
+        p = adjList[i];
+        while(p){
+            cout << setw(4) << p -> neighbour << " <" << p->weight << ">, ";
+            p = p -> next;
+        }
+    }
+    cout<<endl<<endl;
+}
+
+void MST::prim_matrix(){
+    // wybieram jeden wierzcholek
+
+
+
+//  WCZYTYWANIE DO KOLEJKI Z MACIERZY
+    Queue *pq = new Queue();
+    for(int i = 0; i < numOfVertexes; i++){
+        for(int j = 0; j < i; j++){
+            if(graph[i][j] != 0){
+                Queue::Edge temp;
+                temp.v1 = i;
+                temp.v2 = j;
+                temp.weight = graph[i][j];
+                pq->insert(temp);
+            }
+        }
+    }
+    pq->print();
+
+
+
 
 }
