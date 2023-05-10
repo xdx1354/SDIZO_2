@@ -25,7 +25,7 @@ public:
     AdjNode *p;                   //temp list ??
 
     int **graph;
-    int numOfEdges, numOfVertexes, pos;
+    int numOfEdges, numOfVertices, pos;
     int weight;
     int density;
 
@@ -44,6 +44,8 @@ public:
     void kruskal_matrix();
     void kruskal_list();
 
+    int findParent(int, int*);
+    void unionSets(int, int, int*);
     //TODO: to nie wszystkie potrzebne funkcje
 
 

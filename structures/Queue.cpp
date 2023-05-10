@@ -50,6 +50,7 @@ void Queue::deleteFromBeginning() {
     if(head != NULL){
         Node* temp = head;
         Edge data = head ->data;
+        head = head -> next;
         delete temp;
     }
 }

@@ -15,5 +15,6 @@ int main() {
     mst.generateGraphFromFile();
     mst.printMatrix();
 //    mst.printAdjacencyList();
-   mst.prim_matrix();
+//    mst.prim_matrix();
+    mst.kruskal_matrix();
 }

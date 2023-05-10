@@ -12,38 +12,38 @@ using namespace std;
 void MST::generateGraph() {
     srand(time(NULL));
 
-    adjList = new AdjNode *[numOfEdges * (numOfVertexes - 1) / 2];
+    adjList = new AdjNode *[numOfEdges * (numOfVertices - 1) / 2];
     int v1, v2, weight;
     int idFromGraph, idOutside;
 
-    graph = new int *[numOfVertexes];
+    graph = new int *[numOfVertices];
 
-    for(int i =0; i< numOfVertexes; i++){
-        graph[i] = new int [numOfVertexes];             // Tworzenie dwuwymiarowej tablicy
+    for(int i =0; i < numOfVertices; i++){
+        graph[i] = new int [numOfVertices];             // Tworzenie dwuwymiarowej tablicy
         adjList[i] = NULL;
-        for(int j =0; j< numOfVertexes; j++){
+        for(int j =0; j < numOfVertices; j++){
             graph [i][j] = 0;                           // ustawiam w macierzy na brak relacji pomiedzy wierzcholkami
         }
     }
 
-    int inGraph [numOfVertexes + 1];
-    int notInGraph[numOfVertexes];
+    int inGraph [numOfVertices + 1];
+    int notInGraph[numOfVertices];
 
     inGraph [0] = 0;
-    for(int i = 0; i<numOfVertexes-1; i++){
+    for(int i = 0; i < numOfVertices - 1; i++){
         notInGraph[i] = i+1;
     }
 
-    for(int i = 0; i<numOfVertexes-1; i++){
+    for(int i = 0; i < numOfVertices - 1; i++){
         idFromGraph = rand()%(i + 1);                       //losuje id wierzcholka istniejacego w grafie
-        idOutside = rand()%(numOfVertexes - i - 1);         // losuje id wierzcholka, ktory jeszcze nie zostal dodany
+        idOutside = rand()%(numOfVertices - i - 1);         // losuje id wierzcholka, ktory jeszcze nie zostal dodany
         v1 = inGraph[idFromGraph];                          //
         v2 = notInGraph[idOutside];
         weight = rand()%1000000 + 1;
         notInGraph[idOutside] = 0;                          // zaznaczam, że wierzcholek jest juz w grafie
         inGraph[i + 1] = v2;                                // dopisuje go do listy wierzcholkow w grafie na koniec
 
-        sort(notInGraph, notInGraph + numOfVertexes - i - 1, greater<int>());       // Sortowanie malejące wierzchołków tzn. uzyte beda na koncu
+        sort(notInGraph, notInGraph + numOfVertices - i - 1, greater<int>());       // Sortowanie malejące wierzchołków tzn. uzyte beda na koncu
 
         graph[v1][v2] = weight;
         graph[v2][v1] = weight;                             // dopisywanie wagi do macierzy sąsiedzctw
@@ -80,17 +80,17 @@ void MST::generateGraphFromFile() {
     ifstream fin;
 
     fin.open(fileName.c_str(), ios::in);        // TODO: sprawdzic jak dziala dokladnie ten tryb
-    fin >> numOfEdges >> numOfVertexes;                 // wczytuje liczbe krawedzi i wierzcholkow do pola klasy
+    fin >> numOfEdges >> numOfVertices;                 // wczytuje liczbe krawedzi i wierzcholkow do pola klasy
 
-    adjList = new AdjNode * [numOfVertexes];
+    adjList = new AdjNode * [numOfVertices];
 
-    graph = new int *[numOfVertexes];
+    graph = new int *[numOfVertices];
 
     // TWORZE STRUKTURY I WYPELNIAM JE PUSTYMI WARTOSCIAMI
-    for(int i =0; i< numOfVertexes; i++){
-        graph[i] = new int [numOfVertexes];             // Tworzenie dwuwymiarowej tablicy - dokladanie drugiego wymiaru
+    for(int i =0; i < numOfVertices; i++){
+        graph[i] = new int [numOfVertices];             // Tworzenie dwuwymiarowej tablicy - dokladanie drugiego wymiaru
         adjList[i] = NULL;
-        for(int j =0; j< numOfVertexes; j++){
+        for(int j =0; j < numOfVertices; j++){
             graph [i][j] = 0;                           // ustawiam w macierzy na brak relacji pomiedzy wierzcholkami
         }
     }
@@ -127,20 +127,20 @@ void MST::printMatrix() {
 
     cout<<endl<<"ADJACENCY MATRIX"<<endl;
     cout << setw(6) << " ";
-    for(int i = 0; i < numOfVertexes; i++){
+    for(int i = 0; i < numOfVertices; i++){
         cout << setw(6) << i;                               // drukowanie numerow kolumn
     }
 //    cout<<endl;
 //    cout << setw(6) << " ";
-//    for(int i = 0; i < numOfVertexes; i++){
+//    for(int i = 0; i < numOfVertices; i++){
 //        cout << setfill('-');                               // drukowanie numerow kolumn
 //    }
 
     cout<<endl;
 
-    for(int i = 0; i < numOfVertexes; i++){
+    for(int i = 0; i < numOfVertices; i++){
         cout << setw(6) << i;                               // drukowanie numerow wierszy
-        for(int j = 0; j < numOfVertexes; j++){
+        for(int j = 0; j < numOfVertices; j++){
             cout << setw(6) << graph [i] [j];
         }
         cout<<endl;
@@ -153,7 +153,7 @@ void MST::printAdjacencyList() {
 
     cout<<endl<<"ADJACENCY LIST"<<endl;
     cout<< "ID_OF_VERTEX:  ID_OF_VERTEX <WEIGHT_OF_EDGE>";
-    for(int i = 0; i < numOfVertexes; i++){
+    for(int i = 0; i < numOfVertices; i++){
         cout<<endl<< i << ": ";
         p = adjList[i];
         while(p){
@@ -171,7 +171,7 @@ void MST::prim_matrix(){
 
 //  WCZYTYWANIE DO KOLEJKI Z MACIERZY
     Queue *pq = new Queue();
-    for(int i = 0; i < numOfVertexes; i++){
+    for(int i = 0; i < numOfVertices; i++){
         for(int j = 0; j < i; j++){
             if(graph[i][j] != 0){
                 Queue::Edge temp;
@@ -187,4 +187,84 @@ void MST::prim_matrix(){
 
 
 
+}
+
+void MST::kruskal_matrix() {
+    int connected[numOfVertices];
+
+    for(int i = 0; i < numOfVertices; i++){       // tworze tablice zapisujaca ktore wierzcholki sa juz polaczone
+        connected[i] = -1;
+    }
+
+    Queue *pq = new Queue();                    // tworze posortowana kolejkę krawedzi
+    for(int i = 0; i < numOfVertices; i++){
+        for(int j = 0; j < i; j++){
+            if(graph[i][j] != 0){
+                Queue::Edge temp;
+                temp.v1 = i;
+                temp.v2 = j;
+                temp.weight = graph[i][j];
+                pq->insert(temp);
+            }
+        }
+    }
+    /*
+    Queue::Edge first = pq -> head -> data;
+    int counter = 0;
+    int sum = 0;
+    while(counter < numOfVertices-1){
+        //case, gdy obydwa sa juz polaczone - bylaby petla
+        if(connected[first.v1] != -1 and  connected[first.v2] != -1){
+            first = pq -> head -> next -> data;
+            pq->deleteFromBeginning();
+        }
+        else{   //znaleziono dobry do dodania
+            sum += first.weight;
+            cout<<first.v1 << " " << first.v2 << " " << first.weight << endl;
+            counter++;
+            connected[first.v1] = 1;
+            connected[first.v2] = 1;
+            first = pq -> head -> next -> data;
+            pq->deleteFromBeginning();
+
+        }
+    }
+     */
+
+    int* parent = new int[numOfVertices];
+    fill(parent, parent + numOfVertices, -1);     //wypełaniam tablice -1 tzn ze dany wierzcholek jest
+                                                                 // korzeniem poddrzewa (poki co)
+    // GLOWNY ALGORYTM
+    int edgeCount = 0;
+    while(edgeCount < numOfVertices - 1){
+        Queue::Edge currentEdge = pq -> head -> data;           // pobieram krawedz o najmniejszej wadze
+        pq -> deleteFromBeginning();                            // usuwam ja z kolejki
+
+        int parent1 = findParent(currentEdge.v1, parent);       //szukam korzenia poddrzewa, do którego należy v1
+        int parent2 = findParent(currentEdge.v2, parent);       //szukam korzenia poddrzewa, do którego należy v2
+
+        if(parent1 != parent2){
+            cout << "Edge: " << currentEdge.v1 << " - " << currentEdge.v2 << ", weight: " << currentEdge. weight <<endl;
+            unionSets( parent1, parent2, parent);
+            edgeCount++;
+        }
+    }
+
+    delete[] parent;                   // usuwam tablice, bo nie bedzie juz potrzebna
+}
+
+/*
+UTIL FUNCTIONS
+*/
+
+int MST::findParent(int vertex, int* parent){                //rekurencyjne wyszukiwanie korznienia dzrzewa
+    if( parent [vertex] == -1 )
+        return  vertex;
+    return findParent(parent[vertex], parent);
+}
+
+void MST::unionSets(int v1, int v2, int* parent){            //laczenie dwóch poddrzew
+    int parent1 = findParent(v1, parent);
+    int parent2 = findParent(v2, parent);
+    parent[parent1] = parent2;                      //przypisanie korzenia jednego poddrzewa do drugiego
 }
