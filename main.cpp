@@ -14,9 +14,11 @@ int main() {
     MST mst = * new MST();
     mst.generateGraphFromFile();
     mst.printMatrix();
-//    mst.printAdjacencyList();
-    cout<<"\n\nKRUSKAL: \n";
+    mst.printAdjacencyList();
+    cout<<"\n\nKRUSKAL MATRIX: \n";
     mst.kruskal_matrix();
-    cout<<"\n\nPRIM: "<<endl;
-    mst.prim_matrix();
+    cout<<"\n\nKRUSKAL LIST: \n";
+    mst.kruskal_list();
+//    cout<<"\n\nPRIM: "<<endl;
+//    mst.prim_matrix();
 }

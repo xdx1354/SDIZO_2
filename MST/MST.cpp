@@ -208,6 +208,7 @@ void MST::prim_matrix(){
             currentNode  = currentNode -> next;
         }
     }
+    delete[] parent;
 }
 
 //TODO:
@@ -218,11 +219,7 @@ void MST::prim_list() {
 
 //git
 void MST::kruskal_matrix() {
-    int connected[numOfVertices];
 
-    for(int i = 0; i < numOfVertices; i++){       // tworze tablice zapisujaca ktore wierzcholki sa juz polaczone
-        connected[i] = -1;
-    }
 
     Queue *pq = new Queue();                    // tworze posortowana kolejkę krawedzi
     for(int i = 0; i < numOfVertices; i++){
@@ -236,28 +233,7 @@ void MST::kruskal_matrix() {
             }
         }
     }
-    /*
-    Queue::Edge first = pq -> head -> data;
-    int counter = 0;
-    int sum = 0;
-    while(counter < numOfVertices-1){
-        //case, gdy obydwa sa juz polaczone - bylaby petla
-        if(connected[first.v1] != -1 and  connected[first.v2] != -1){
-            first = pq -> head -> next -> data;
-            pq->deleteFromBeginning();
-        }
-        else{   //znaleziono dobry do dodania
-            sum += first.weight;
-            cout<<first.v1 << " " << first.v2 << " " << first.weight << endl;
-            counter++;
-            connected[first.v1] = 1;
-            connected[first.v2] = 1;
-            first = pq -> head -> next -> data;
-            pq->deleteFromBeginning();
 
-        }
-    }
-     */
 
     int* parent = new int[numOfVertices];
     fill(parent, parent + numOfVertices, -1);     //wypełaniam tablice -1 tzn ze dany wierzcholek jest
@@ -284,10 +260,52 @@ void MST::kruskal_matrix() {
 //TODO:
 void MST::kruskal_list() {
 
-    //TODO: zamiana listy na kolejkę
+    Queue *pq = new Queue();                    // tworze posortowana kolejkę krawedzi
 
+    for(int i=0; i<numOfVertices; i++){         // iteruje po wierzchołkach
+        AdjNode *firstNode = adjList[i];        // biore pierwsza krawedz
+        while(firstNode != nullptr){            // petla iterujaca po wszystkich krawdziach tego wierzchołka
+            Queue::Edge e;                      // nowa krawedz do dodania do kolejki
+            e.v1 = i;
+            e.v2 = firstNode -> neighbour;
+            e.weight = firstNode -> weight;
 
-    // TU ten sam algorytm co w macierzowym kruskalu
+            Queue::Node *tmp = pq -> head;      // zmienna pomocnicza do przeszukiwania kolejki
+            bool present = false;
+            while(tmp != nullptr){              //przesukuje kolejke by sprawdzic czy nie mam tej krawedzi, ale w druga strone
+                if((tmp->data.v2 == e.v2 && tmp->data.v1 == e.v1)||(tmp->data.v2 == e.v1 && tmp->data.v1 == e.v2)){
+                    present = true;             // jesli jest juz to wychodzimy
+                    break;
+                }
+                tmp = tmp -> next;              // przechodze do kolejnego elementu kolejki
+            }
+            if(!present){
+                pq->insert(e);                  // jesli nie ma to dodajemy
+            }
+            firstNode = firstNode -> next;      // i przechodzimy do kolejnej krawedzi dla tego wierzcholka
+        }
+    }
+
+    int* parent = new int[numOfVertices];
+    fill(parent, parent + numOfVertices, -1);     //wypełaniam tablice -1 tzn ze dany wierzcholek jest
+    // korzeniem poddrzewa (poki co)
+    // GLOWNY ALGORYTM
+    int edgeCount = 0;
+    while(edgeCount < numOfVertices - 1){
+        Queue::Edge currentEdge = pq -> head -> data;           // pobieram krawedz o najmniejszej wadze
+        pq -> deleteFromBeginning();                            // usuwam ja z kolejki
+
+        int parent1 = findParent(currentEdge.v1, parent);       //szukam korzenia poddrzewa, do którego należy v1
+        int parent2 = findParent(currentEdge.v2, parent);       //szukam korzenia poddrzewa, do którego należy v2
+
+        if(parent1 != parent2){
+            cout << "Edge: " << currentEdge.v1 << " - " << currentEdge.v2 << ", weight: " << currentEdge. weight <<endl;
+            unionSets( parent1, parent2, parent);
+            edgeCount++;
+        }
+    }
+
+    delete[] parent;                   // usuwam tablice, bo nie bedzie juz potrzebna
 }
 
 
