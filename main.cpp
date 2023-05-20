@@ -29,6 +29,7 @@ int main() {
     sp.generateGraphFromFile();
     sp.printMatrix();
     sp.printAdjacencyList();
-    sp.Dijkstra_matrix(0);
+    sp.Dijkstra_matrix(5);
+    sp.Dijkstra_list(5);
 
 }

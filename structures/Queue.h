@@ -12,7 +12,6 @@ class Queue {
 public:
     struct Edge{
         int v1, v2, weight;             // v1- starting vertex, v2- ending vertex
-        Edge *next = nullptr;
     };
 
     struct Node {

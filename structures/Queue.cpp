@@ -8,7 +8,11 @@
 using namespace  std;
 
 Queue::~Queue(){                        //Destructor
-
+    while (head != nullptr) {
+        Node* temp = head;
+        head = head->next;
+        delete temp;
+    }
 }
 
 
