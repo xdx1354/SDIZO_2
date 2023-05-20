@@ -7,11 +7,6 @@
 
 
 class Queue {
-    ~Queue();
-
-
-
-
 
 
 public:
@@ -36,6 +31,7 @@ public:
         head = nullptr;
     };
 
+    ~Queue();
 };
 
 

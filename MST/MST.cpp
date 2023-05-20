@@ -208,13 +208,96 @@ void MST::prim_matrix(){
             currentNode  = currentNode -> next;
         }
     }
+    delete pq;
     delete[] parent;
 }
 
 //TODO:
 void MST::prim_list() {
 
-    // Zamiana listy na kolejkę, reszta analogicznie
+    /// ZAMIANA LIST NA PRIORITY QUEUE
+    Queue *pq = new Queue();                    // tworze posortowana kolejkę krawedzi
+
+    for(int i=0; i<numOfVertices; i++){         // iteruje po wierzchołkach
+        AdjNode *firstNode = adjList[i];        // biore pierwsza krawedz
+        while(firstNode != nullptr){            // petla iterujaca po wszystkich krawdziach tego wierzchołka
+            Queue::Edge e;                      // nowa krawedz do dodania do kolejki
+            e.v1 = i;
+            e.v2 = firstNode -> neighbour;
+            e.weight = firstNode -> weight;
+
+/// Bez tej czesci będą w kolejce duplikaty, ale i tak algorytmy sprawdzaja czy nie ma petli, a duplikaty beda traktowane jako petle
+            Queue::Node *tmp = pq -> head;      // zmienna pomocnicza do przeszukiwania kolejki
+            bool present = false;
+            while(tmp != nullptr){              //przesukuje kolejke by sprawdzic czy nie mam tej krawedzi, ale w druga strone
+                if((tmp->data.v2 == e.v2 && tmp->data.v1 == e.v1)||(tmp->data.v2 == e.v1 && tmp->data.v1 == e.v2)){
+                    present = true;             // jesli jest juz to wychodzimy
+                    break;
+                }
+                tmp = tmp -> next;              // przechodze do kolejnego elementu kolejki
+            }
+            if(!present){
+            pq->insert(e);                  // jesli nie ma to dodajemy
+            }
+            firstNode = firstNode -> next;      // i przechodzimy do kolejnej krawedzi dla tego wierzcholka
+        }
+    }
+
+
+    /// PRZYGOTOWYWANIE TABLICY DO SPRAWDZANIA PĘTLI W GRAFIE - DISJOINT SETS
+    int* parent = new int[numOfVertices];
+    fill(parent, parent + numOfVertices, -1);
+
+    /// WYBIERANIE POCZĄTKOWEGO WIERZCHOŁKA OD KTÓREGO ZACZYNA SIE ALGORYTM (NA BAZIE KRAWĘDZI O NAJMNIEJSZEJ WADZE)
+    Queue::Node* firstNode = pq->head;                                       // losowa krawędzi
+    int parent1 = findParent(firstNode->data.v1, parent);              // szukam korzenia poddrzewa, do którego należy v1
+    int parent2 = findParent(firstNode->data.v2, parent);              // szukam korzenia poddrzewa, do którego należy v2
+    unionSets(parent1, parent2, parent);                              // pierwszy set, parent2 będzie rodzicem całości
+    int permParent = parent2;                                                // permParent to rodzic naszego poddrzewa rozpinającego
+    cout << "Edge: " << firstNode->data.v1 << " - " << firstNode->data.v2 << ", weight: " << firstNode->data.weight <<endl;
+
+    /// GŁOWNA CZEŚĆ FUNKCJI
+    for(int i = 1; i < numOfVertices - 1; i++){                             // wyszukiwanie określonej liczby krawędzi
+        Queue::Node* currentNode = pq->head;
+        while(currentNode != nullptr){                                      // znalezienie najmniejszej krawędzi, która nam pasuje
+            parent1 = findParent(currentNode->data.v1, parent);       // szukam korzenia poddrzewa, do którego należy v1
+            parent2 = findParent(currentNode->data.v2, parent);       // szukam korzenia poddrzewa, do którego należy v2
+
+            if(parent1 != parent2 && (parent2 == permParent || parent1 == permParent )){            // sprawdza, nie ma pętli i czy krawedz jest sasiadujaca z drzewem co mam do tej pory
+                cout << "Edge: " << currentNode->data.v1 << " - " << currentNode->data.v2 << ", weight: " << currentNode->data.weight <<endl;
+                unionSets( parent2, parent1, parent);
+                break;
+            }
+            currentNode  = currentNode -> next;
+        }
+    }
+    delete pq;
+    delete[] parent;
+
+
+/*
+    int* parent = new int[numOfVertices];
+    fill(parent, parent + numOfVertices, -1);     //wypełaniam tablice -1 tzn ze dany wierzcholek jest
+    // korzeniem poddrzewa (poki co)
+    // GLOWNY ALGORYTM
+    int edgeCount = 0;
+    while(edgeCount < numOfVertices - 1){
+        Queue::Edge currentEdge = pq -> head -> data;           // pobieram krawedz o najmniejszej wadze
+        pq -> deleteFromBeginning();                            // usuwam ja z kolejki
+
+        int parent1 = findParent(currentEdge.v1, parent);       //szukam korzenia poddrzewa, do którego należy v1
+        int parent2 = findParent(currentEdge.v2, parent);       //szukam korzenia poddrzewa, do którego należy v2
+
+        if(parent1 != parent2){
+            cout << "Edge: " << currentEdge.v1 << " - " << currentEdge.v2 << ", weight: " << currentEdge. weight <<endl;
+            unionSets( parent1, parent2, parent);
+            edgeCount++;
+        }
+    }
+
+    delete pq;
+    delete[] parent;                   // usuwam tablice, bo nie bedzie juz potrzebna
+*/
 }
 
 //git
@@ -254,13 +337,14 @@ void MST::kruskal_matrix() {
         }
     }
 
+    delete pq;
     delete[] parent;                   // usuwam tablice, bo nie bedzie juz potrzebna
 }
 
-//TODO:
+//git, ale nieoptymalnie chyba
 void MST::kruskal_list() {
 
-    Queue *pq = new Queue();                    // tworze posortowana kolejkę krawedzi
+    auto *pq = new Queue();                    // tworze posortowana kolejkę krawedzi
 
     for(int i=0; i<numOfVertices; i++){         // iteruje po wierzchołkach
         AdjNode *firstNode = adjList[i];        // biore pierwsza krawedz
@@ -270,18 +354,19 @@ void MST::kruskal_list() {
             e.v2 = firstNode -> neighbour;
             e.weight = firstNode -> weight;
 
-            Queue::Node *tmp = pq -> head;      // zmienna pomocnicza do przeszukiwania kolejki
-            bool present = false;
-            while(tmp != nullptr){              //przesukuje kolejke by sprawdzic czy nie mam tej krawedzi, ale w druga strone
-                if((tmp->data.v2 == e.v2 && tmp->data.v1 == e.v1)||(tmp->data.v2 == e.v1 && tmp->data.v1 == e.v2)){
-                    present = true;             // jesli jest juz to wychodzimy
-                    break;
-                }
-                tmp = tmp -> next;              // przechodze do kolejnego elementu kolejki
-            }
-            if(!present){
+/// Bez tej czesci będą w kolejce duplikaty, ale i tak algorytmy sprawdzaja czy nie ma petli, a duplikaty beda traktowane jako petle
+//            Queue::Node *tmp = pq -> head;      // zmienna pomocnicza do przeszukiwania kolejki
+//            bool present = false;
+//            while(tmp != nullptr){              //przesukuje kolejke by sprawdzic czy nie mam tej krawedzi, ale w druga strone
+//                if((tmp->data.v2 == e.v2 && tmp->data.v1 == e.v1)||(tmp->data.v2 == e.v1 && tmp->data.v1 == e.v2)){
+//                    present = true;             // jesli jest juz to wychodzimy
+//                    break;
+//                }
+//                tmp = tmp -> next;              // przechodze do kolejnego elementu kolejki
+//            }
+//            if(!present){
                 pq->insert(e);                  // jesli nie ma to dodajemy
-            }
+//            }
             firstNode = firstNode -> next;      // i przechodzimy do kolejnej krawedzi dla tego wierzcholka
         }
     }
@@ -305,6 +390,7 @@ void MST::kruskal_list() {
         }
     }
 
+    delete pq;
     delete[] parent;                   // usuwam tablice, bo nie bedzie juz potrzebna
 }
 

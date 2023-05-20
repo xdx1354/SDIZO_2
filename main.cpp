@@ -19,6 +19,8 @@ int main() {
     mst.kruskal_matrix();
     cout<<"\n\nKRUSKAL LIST: \n";
     mst.kruskal_list();
-//    cout<<"\n\nPRIM: "<<endl;
-//    mst.prim_matrix();
+    cout<<"\n\nPRIM LIST: "<<endl;
+    mst.prim_list();
+    cout<<"\n\nPRIM MATRIX: "<<endl;
+    mst.prim_matrix();
 }
