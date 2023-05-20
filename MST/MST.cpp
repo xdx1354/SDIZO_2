@@ -10,60 +10,64 @@
 using namespace std;
 
 //TODO:
-void MST::generateGraph() {
+void MST::generateGraph(int n, double d) {
     srand(time(NULL));
+    numOfVertices = n;
+    density = d;
+    numOfEdges = ((n*(n-1))/2 )*d;
 
-    adjList = new AdjNode *[numOfEdges * (numOfVertices - 1) / 2];
-    int v1, v2, weight;
-    int idFromGraph, idOutside;
+    adjList = new AdjNode * [numOfVertices];
 
     graph = new int *[numOfVertices];
 
+    /// TWORZE STRUKTURY I WYPELNIAM JE PUSTYMI WARTOSCIAMI
     for(int i =0; i < numOfVertices; i++){
-        graph[i] = new int [numOfVertices];             // Tworzenie dwuwymiarowej tablicy
+        graph[i] = new int [numOfVertices];             // Tworzenie dwuwymiarowej tablicy - dokladanie drugiego wymiaru
         adjList[i] = NULL;
         for(int j =0; j < numOfVertices; j++){
             graph [i][j] = 0;                           // ustawiam w macierzy na brak relacji pomiedzy wierzcholkami
         }
     }
 
-    int inGraph [numOfVertices + 1];
-    int notInGraph[numOfVertices];
+    for(int i=0; i<numOfEdges; i++){
 
-    inGraph [0] = 0;
-    for(int i = 0; i < numOfVertices - 1; i++){
-        notInGraph[i] = i+1;
+        int randWeight = rand() % 100000 + 1;
+        int randV1 = rand() % numOfVertices;
+        int randV2 = rand() % numOfVertices;
+        bool tryAgain = false;
+
+        do {
+            tryAgain = false;
+            if (randV1 != randV2 && graph[randV1][randV2] == 0) {                    // losuje do czasu gdy wylosuja sie dwa rozne
+
+                graph[randV1][randV2] = randWeight;         //wstawiam do macierzy
+                graph[randV2][randV1] = randWeight;
+
+
+                AdjNode *newNode1 = new AdjNode;                           // wstawiam do listy
+                newNode1->weight = randWeight;
+                newNode1->neighbour = randV2;
+                newNode1->next = adjList[randV1];
+                adjList[randV1] = newNode1;
+
+                AdjNode *newNode2 = new AdjNode;                           // wstawiam do listy
+                newNode2->weight = randWeight;
+                newNode2->neighbour = randV1;
+                newNode2->next = adjList[randV1];
+                adjList[randV2] = newNode2;
+
+                cout<<"\n Udalo sie. V1: "<<randV1<<" V2:"<<randV2<<" waga:"<<randWeight;
+
+            } else {
+                srand(time(NULL));
+                randV1 = rand() % numOfVertices;
+                randV2 = rand() % numOfVertices;
+                tryAgain = true;
+
+            }
+        } while(tryAgain);                 // do skutku probuje na nowo wygenerowac krawedzi
+
     }
-
-    for(int i = 0; i < numOfVertices - 1; i++){
-        idFromGraph = rand()%(i + 1);                       //losuje id wierzcholka istniejacego w grafie
-        idOutside = rand()%(numOfVertices - i - 1);         // losuje id wierzcholka, ktory jeszcze nie zostal dodany
-        v1 = inGraph[idFromGraph];                          //
-        v2 = notInGraph[idOutside];
-        weight = rand()%1000000 + 1;
-        notInGraph[idOutside] = 0;                          // zaznaczam, że wierzcholek jest juz w grafie
-        inGraph[i + 1] = v2;                                // dopisuje go do listy wierzcholkow w grafie na koniec
-
-        sort(notInGraph, notInGraph + numOfVertices - i - 1, greater<int>());       // Sortowanie malejące wierzchołków tzn. uzyte beda na koncu
-
-        graph[v1][v2] = weight;
-        graph[v2][v1] = weight;                             // dopisywanie wagi do macierzy sąsiedzctw
-
-        p = new AdjNode;                              //dopisywanie v1
-        p -> neighbour = v2;
-        p -> next = adjList[v1];
-        p -> weight = weight;
-        adjList[v1] = p;
-
-        p = new AdjNode;                              //dopisywanie v1
-        p -> neighbour = v1;
-        p -> next = adjList[v2];
-        p -> weight = weight;
-        adjList[v2] = p;
-    }
-
-    // TODO: dokonczyc i przeanalizowac dzialanie algorytmu
-
 }
 
 //git

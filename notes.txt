@@ -7,8 +7,5 @@ ale w reszcie należy to uwzględnić.
 
 
 TODO:
-    - algorytm Prima lista
-    - algorytm Kruskala lista
-    - algorytm bellmana-Forda
-    - algorytm Dijkstry
+    - krawedzie dla SCIEZKi maja byc skierowane`
     - losowanie danych

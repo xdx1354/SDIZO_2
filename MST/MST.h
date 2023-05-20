@@ -23,12 +23,12 @@ public:
     int **graph;
     int numOfEdges, numOfVertices, pos;
     int weight;
-    int density;
+    double density;
 
 
     void menu_MST();
     void generateGraphFromFile();
-    void generateGraph();
+    void generateGraph(int n, double d);
 
     void printMatrix();
     void printAdjacencyList();

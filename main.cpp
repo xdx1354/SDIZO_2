@@ -12,7 +12,8 @@ int main() {
 //
 
 
-//    MST mst = * new MST();
+    MST mst = * new MST();
+    mst.generateGraph(10, 0.99);
 //    mst.generateGraphFromFile();
 //    mst.printMatrix();
 //    mst.printAdjacencyList();
@@ -25,12 +26,13 @@ int main() {
 //    cout<<"\n\nPRIM MATRIX: "<<endl;
 //    mst.prim_matrix();
 
-    ShortestPath sp = * new ShortestPath();
-    sp.generateGraphFromFile();
+//    ShortestPath sp = * new ShortestPath();
+//    //sp.generateGraphFromFile();
+//    sp.generateGraph(10, 0.5);
 //    sp.printMatrix();
 //    sp.printAdjacencyList();
-    sp.Dijkstra_matrix(5);
+//    sp.Dijkstra_matrix(5);
 //    sp.Dijkstra_list(5);
-    sp.BellmanFord_matrix(5);
-    sp.BellmanFord_list(5);
+//    sp.BellmanFord_matrix(5);
+//    sp.BellmanFord_list(5);
 }

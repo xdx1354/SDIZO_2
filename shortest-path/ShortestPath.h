@@ -23,13 +23,13 @@ public:
     int **graph;
     int numOfEdges, numOfVertices, pos;
     int weight;
-    int density;
+    double density;
     int *prev;                          // tablica poprzedników
     long long *distance;                // tablica z kosztami dojscia do poszczegolnych wierzchołków
 
     void menu_Path();
     void generateGraphFromFile();
-    void generateGraph();
+    void generateGraph(int n, double d);
 
     void printMatrix();
     void printAdjacencyList();
