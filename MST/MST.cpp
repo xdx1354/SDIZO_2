@@ -212,7 +212,7 @@ void MST::prim_matrix(){
     delete[] parent;
 }
 
-//TODO:
+// git, musialem zmienic kolejnosc argumentow w unionSets() tak by parent1 był korzeniem
 void MST::prim_list() {
 
     /// ZAMIANA LIST NA PRIORITY QUEUE

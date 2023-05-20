@@ -15,9 +15,6 @@ public:
         int weight;
     };
 
-    struct Edge{
-        int v1, v2, weight;             // v1- starting vertex, v2- ending vertex
-    };
 
 
     AdjNode **adjList;
@@ -45,7 +42,7 @@ public:
 
     int findParent(int, int*);
     void unionSets(int, int, int*);
-    //TODO: to nie wszystkie potrzebne funkcje
+
 
 
 };

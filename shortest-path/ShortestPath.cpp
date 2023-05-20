@@ -1,0 +1,242 @@
+//
+// Created by stani on 20.05.2023.
+//
+
+#include "ShortestPath.h"
+#include "../structures/Queue.h"
+#include<iostream>
+#include <bits/stdc++.h>
+using namespace std;
+
+void ShortestPath::generateGraphFromFile() {
+
+        string fileName;
+
+        cout<<"Prosze podac nazwe pliku: ";
+        cin>>fileName;
+        if( fileName[fileName.size()-1] != 't' or fileName[fileName.size()-2] != 'x' or fileName [fileName.size()-1] != 't' ){
+            fileName = fileName + ".txt";
+        }
+        //NADPISUJE FILENAME DO TESTÓW!!!
+        fileName = R"(D:\PWR\4 sem\SDIZO\Projekt2\dane.txt)";
+
+        ifstream fin;
+
+        fin.open(fileName.c_str(), ios::in);        // TODO: sprawdzic jak dziala dokladnie ten tryb
+        fin >> numOfEdges >> numOfVertices;                 // wczytuje liczbe krawedzi i wierzcholkow do pola klasy
+
+        adjList = new AdjNode * [numOfVertices];
+
+        graph = new int *[numOfVertices];
+
+        // TWORZE STRUKTURY I WYPELNIAM JE PUSTYMI WARTOSCIAMI
+        for(int i =0; i < numOfVertices; i++){
+            graph[i] = new int [numOfVertices];             // Tworzenie dwuwymiarowej tablicy - dokladanie drugiego wymiaru
+            adjList[i] = NULL;
+            for(int j =0; j < numOfVertices; j++){
+                graph [i][j] = 0;                           // ustawiam w macierzy na brak relacji pomiedzy wierzcholkami
+            }
+        }
+
+        // POBIERAM DANE Z PLIKU I WPISUJE DO STRUKTUR
+        int v1, v2, weight;                                 // v1 - poczatkowy wierch, v2 - koncowy, weight - waga krawedzi
+
+
+        for(int i = 0; i < numOfEdges; i++){
+            fin >> v1 >> v2 >> weight;
+
+            p = new AdjNode;                          // nowy element listy sasiadow - wierzcholek v1
+            p -> neighbour = v2;                            // jego sasiadame jest wierzcholek v2
+            p -> next = adjList[v1];                     // nastepny po nim jest ten element co byl pierwszy dotychczas
+            p -> weight = weight;                           // ustawiam wage
+            adjList [v1] = p;                            // wstawiam na pierwsze miejsce tzn, ze w adjList[] bedzie teraz wskaznik na niego
+
+            p = new AdjNode;                          // analogicznie tworze relacje dla v2
+            p -> neighbour = v1;
+            p -> next = adjList[v2];
+            p -> weight = weight;
+            adjList[v2] = p;
+
+            // wpisuje wage w pola macierzy sasiedzctw
+            graph[v1][v2] = weight;
+            graph[v2][v1] = weight;
+
+        }
+
+}
+
+void ShortestPath::generateGraph() {
+    srand(time(NULL));
+
+    adjList = new AdjNode *[numOfEdges * (numOfVertices - 1) / 2];
+    int v1, v2, weight;
+    int idFromGraph, idOutside;
+
+    graph = new int *[numOfVertices];
+
+    for(int i =0; i < numOfVertices; i++){
+        graph[i] = new int [numOfVertices];             // Tworzenie dwuwymiarowej tablicy
+        adjList[i] = NULL;
+        for(int j =0; j < numOfVertices; j++){
+            graph [i][j] = 0;                           // ustawiam w macierzy na brak relacji pomiedzy wierzcholkami
+        }
+    }
+
+    int inGraph [numOfVertices + 1];
+    int notInGraph[numOfVertices];
+
+    inGraph [0] = 0;
+    for(int i = 0; i < numOfVertices - 1; i++){
+        notInGraph[i] = i+1;
+    }
+
+    for(int i = 0; i < numOfVertices - 1; i++){
+        idFromGraph = rand()%(i + 1);                       //losuje id wierzcholka istniejacego w grafie
+        idOutside = rand()%(numOfVertices - i - 1);         // losuje id wierzcholka, ktory jeszcze nie zostal dodany
+        v1 = inGraph[idFromGraph];                          //
+        v2 = notInGraph[idOutside];
+        weight = rand()%1000000 + 1;
+        notInGraph[idOutside] = 0;                          // zaznaczam, że wierzcholek jest juz w grafie
+        inGraph[i + 1] = v2;                                // dopisuje go do listy wierzcholkow w grafie na koniec
+
+        sort(notInGraph, notInGraph + numOfVertices - i - 1, greater<int>());       // Sortowanie malejące wierzchołków tzn. uzyte beda na koncu
+
+        graph[v1][v2] = weight;
+        graph[v2][v1] = weight;                             // dopisywanie wagi do macierzy sąsiedzctw
+
+        p = new AdjNode;                              //dopisywanie v1
+        p -> neighbour = v2;
+        p -> next = adjList[v1];
+        p -> weight = weight;
+        adjList[v1] = p;
+
+        p = new AdjNode;                              //dopisywanie v1
+        p -> neighbour = v1;
+        p -> next = adjList[v2];
+        p -> weight = weight;
+        adjList[v2] = p;
+    }
+
+    // TODO: dokonczyc i przeanalizowac dzialanie algorytmu
+
+}
+
+void ShortestPath::printAdjacencyList() {
+
+    cout<<endl<<"ADJACENCY LIST"<<endl;
+    cout<< "ID_OF_VERTEX:  ID_OF_VERTEX <WEIGHT_OF_EDGE>";
+    for(int i = 0; i < numOfVertices; i++){
+        cout<<endl<< i << ": ";
+        p = adjList[i];
+        while(p){
+            cout << setw(4) << p -> neighbour << " <" << p->weight << ">, ";
+            p = p -> next;
+        }
+    }
+    cout<<endl<<endl;
+}
+
+void ShortestPath::printMatrix() {
+
+    cout<<endl<<"ADJACENCY MATRIX"<<endl;
+    cout << setw(6) << " ";
+    for(int i = 0; i < numOfVertices; i++){
+        cout << setw(6) << i;                               // drukowanie numerow kolumn
+    }
+//    cout<<endl;
+//    cout << setw(6) << " ";
+//    for(int i = 0; i < numOfVertices; i++){
+//        cout << setfill('-');                               // drukowanie numerow kolumn
+//    }
+
+    cout<<endl;
+
+    for(int i = 0; i < numOfVertices; i++){
+        cout << setw(6) << i;                               // drukowanie numerow wierszy
+        for(int j = 0; j < numOfVertices; j++){
+            cout << setw(6) << graph [i] [j];
+        }
+        cout<<endl;
+    }
+
+}
+
+void ShortestPath::Dijkstra_list(int startingV) {}
+
+void ShortestPath::Dijkstra_matrix(int startingV) {
+
+    int u, j;
+    bool *visited;
+
+    distance = new long long [numOfVertices];
+    prev = new int [numOfVertices];
+    visited = new bool [numOfVertices];
+
+    for(int i=0; i<numOfVertices; i++){
+        // TODO: tu wstawić infinity
+        distance[i] = 99999999999;
+        prev[i] = -1;
+        visited[i] = false;
+    }
+
+
+    distance[startingV] = 0;
+
+
+    for(int i = 0; i < numOfVertices; i++){
+        for(j=0; visited[j]; j++);
+        for(u = j++; j<numOfVertices; j++){
+            if(!visited[j] && (distance[j] < distance[u])){         // sprawdzam czy wierzchołek nie został jeszcze
+                u = j;                                              // odwiedzony i ma najmiejsza odleglosc
+            }                                                       // jesli tak to u = j
+            visited[u] = true;                                      // ustawiam u na odwiedzony
+        }
+
+        for(int v=0; v<numOfVertices; v++){    // sprawdzam czy znaleziona została nowa najkrotsza sciezka do v przez u
+            if(graph[u][v]!=0 && (distance[v] > distance[u] + graph[u][v])){
+                distance[v] = distance[u] + graph[u][v];
+                prev[v] = u;                    // ustawiam u jako poprzednika v
+            }
+        }
+    }
+
+    printPath(startingV);                       // drukowanie najkrotszych sciezek z wierzcholka startowego
+
+    delete distance;
+    delete prev;
+    delete visited;
+}
+
+void ShortestPath::BellmanFord_matrix(int startingV) {}
+
+void ShortestPath::BellmanFord_list(int startingV) {
+
+
+
+}
+
+
+
+/// UTIL FUNCTIONS
+
+void ShortestPath::printPath(int startingV) {
+
+    int *S, stackCounter;
+
+    S = new int[numOfVertices];
+    stackCounter = 0;
+
+    cout<<"Shortest paths from vertex "<<startingV<<endl;
+
+    for(int i = 0; i<numOfVertices; i++){
+        cout<< i <<": ";
+        for(int j = i; j > -1; j=prev[j]){              // przechodze przez tablice poprzedników i dodaje
+            S[stackCounter++] = j;                             // kolejne wierzchołki na stos
+        }
+        while (stackCounter){                                  // zdejmuje wierzchołki ze stosu w odwrotnej kolejności
+            cout<< S[--stackCounter]<<" ";
+        }
+        cout<< "$"<< distance[i] << endl;
+    }
+}
+

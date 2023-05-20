@@ -1,6 +1,7 @@
 #include <iostream>
 #include <bits/stdc++.h>
 #include "MST/MST.h"
+#include "shortest-path/ShortestPath.h"
 
 using namespace std;
 
@@ -11,16 +12,23 @@ int main() {
 //
 
 
-    MST mst = * new MST();
-    mst.generateGraphFromFile();
-    mst.printMatrix();
-    mst.printAdjacencyList();
-    cout<<"\n\nKRUSKAL MATRIX: \n";
-    mst.kruskal_matrix();
-    cout<<"\n\nKRUSKAL LIST: \n";
-    mst.kruskal_list();
-    cout<<"\n\nPRIM LIST: "<<endl;
-    mst.prim_list();
-    cout<<"\n\nPRIM MATRIX: "<<endl;
-    mst.prim_matrix();
+//    MST mst = * new MST();
+//    mst.generateGraphFromFile();
+//    mst.printMatrix();
+//    mst.printAdjacencyList();
+//    cout<<"\n\nKRUSKAL MATRIX: \n";
+//    mst.kruskal_matrix();
+//    cout<<"\n\nKRUSKAL LIST: \n";
+//    mst.kruskal_list();
+//    cout<<"\n\nPRIM LIST: "<<endl;
+//    mst.prim_list();
+//    cout<<"\n\nPRIM MATRIX: "<<endl;
+//    mst.prim_matrix();
+
+    ShortestPath sp = * new ShortestPath();
+    sp.generateGraphFromFile();
+    sp.printMatrix();
+    sp.printAdjacencyList();
+    sp.Dijkstra_matrix(0);
+
 }
