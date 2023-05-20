@@ -363,10 +363,114 @@ void ShortestPath::Dijkstra_matrix(int startingV) {
 
 }
 
-void ShortestPath::BellmanFord_matrix(int startingV) {}
+void ShortestPath::BellmanFord_matrix(int startingV) {
+
+    long long* distance = new long long[numOfVertices];
+    int* prev = new int[numOfVertices];
+
+    for (int i = 0; i < numOfVertices; ++i) {
+        distance[i] = 99999999;
+        prev[i] = -1;
+    }
+
+    distance[startingV] = 0;
+
+    for (int i = 1; i < numOfVertices; i++) {
+
+        for (int u = 0; u < numOfVertices; u++) {
+            for (int v = 0; v < numOfVertices; v++) {
+                if (graph[u][v] != 0 && distance[v] > distance[u] + graph[u][v]) {
+                    distance[v] = distance[u] + graph[u][v];
+                    // cout<<"dystans dla: " <<v<<" to teraz " <<distance[v]<<endl;
+                    prev[v] = u;
+                }
+            }
+
+        }
+    }
+
+
+    cout<<endl<<endl;
+
+    for (int i = 0; i < numOfVertices; ++i) {
+        std::cout << "Shortest path from: " << startingV << " to: " << i << ": ";
+        if (distance[i] == std::numeric_limits<long long>::max()) {
+            std::cout << "NO PATH" << std::endl;
+        } else {
+            std::cout << distance[i] << " (previous: ";
+            int current = i;
+            while (current != -1) {
+                std::cout << current << " ";
+                current = prev[current];
+            }
+            std::cout << ")" << std::endl;
+        }
+    }
+
+    delete[] distance;
+    delete[] prev;
+}
+
 
 void ShortestPath::BellmanFord_list(int startingV) {
+    long long* distance = new long long[numOfVertices];
+    int* prev = new int[numOfVertices];
 
+    for (int i = 0; i < numOfVertices; ++i) {
+        distance[i] = 999999999;
+        prev[i] = -1;
+    }
+
+    distance[startingV] = 0;
+
+    for (int i = 1; i < numOfVertices; i++) {
+        for (int u = 0; u < numOfVertices; u++) {
+            for (int v = 0; v < numOfVertices; v++) {
+
+                AdjNode *firstNode = adjList[u];        // biore pierwsza krawedz
+                while (firstNode != nullptr && firstNode->neighbour !=
+                                               v) {            // petla iterujaca po wszystkich krawdziach tego wierzchołka
+                    firstNode = firstNode->next;
+                }
+                if (firstNode != nullptr) {           // jesli znaleziono taka krawedz
+                    if ((distance[v] > distance[u] + firstNode->weight)) {
+                        distance[v] = distance[u] + firstNode->weight;
+                        prev[v] = u;
+                    }
+                }
+            }
+
+//            for (int v = 0; v < numOfVertices; v++) {
+//                if (graph[u][v] != 0 && distance[v] > distance[u] + graph[u][v]) {
+//                    distance[v] = distance[u] + graph[u][v];
+//                    // cout<<"dystans dla: " <<v<<" to teraz " <<distance[v]<<endl;
+//                    prev[v] = u;
+//                }
+//            }
+
+        }
+    }
+
+
+    cout<<endl<<endl;
+
+    for (int i = 0; i < numOfVertices; ++i) {
+        std::cout << "Shortest path from: " << startingV << " to: " << i << ": ";
+        if (distance[i] == std::numeric_limits<long long>::max()) {
+            std::cout << "NO PATH" << std::endl;
+        } else {
+            std::cout << distance[i] << " (previous: ";
+            int current = i;
+            while (current != -1) {
+                std::cout << current << " ";
+                current = prev[current];
+            }
+            std::cout << ")" << std::endl;
+        }
+    }
+
+    delete[] distance;
+    delete[] prev;
 
 
 }

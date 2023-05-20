@@ -27,9 +27,10 @@ int main() {
 
     ShortestPath sp = * new ShortestPath();
     sp.generateGraphFromFile();
-    sp.printMatrix();
-    sp.printAdjacencyList();
+//    sp.printMatrix();
+//    sp.printAdjacencyList();
     sp.Dijkstra_matrix(5);
-    sp.Dijkstra_list(5);
-
+//    sp.Dijkstra_list(5);
+    sp.BellmanFord_matrix(5);
+    sp.BellmanFord_list(5);
 }
