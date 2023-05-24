@@ -8,6 +8,115 @@
 #include <bits/stdc++.h>
 using namespace std;
 
+
+void ShortestPath::menu_Path() {
+
+    cout<<"\nSHORTEST PATH\n";
+
+    int x = -1;
+    while(x!=0){
+        cout<<"\n----------------------------------------------------\n";
+        cout<<"1. Generate new random graph\n";
+        cout<<"2. Generate new graph from file\n";
+        cout<<"3. Test Dijkstra algorithm (Matrix)\n";
+        cout<<"4. Test Dijkstra algorithm (Adjacency  list)\n";
+        cout<<"5. Test Bellman-Ford algorithm (Matrix)\n";
+        cout<<"6. Test Bellman-Ford algorithm (Adjacency  list)\n";
+        cout<<"7. Print graph (as matrix and as adjacency list)\n";
+        cout<<"0. Exit\n";
+        cout<<"\nChoose task: \n";
+        cin>>x;
+        switch(x){
+            default:{
+                cout<<"Wrong number.\n";
+                break;
+            }
+            case 0:{
+                //eXIT
+
+                break;
+            }
+
+            case 1:{
+                int n,d;
+                cout<<"\nChoose number of vertices in graph: ";
+                cin>>n;
+                cout<<"\nChoose density of graph: ";
+                cin>>d;
+                generateGraph(n,d);
+                break;
+            }
+            case 2:{
+                generateGraphFromFile();
+                cout<<"DONE";
+                break;
+            }
+            case 3:{
+                int startingPoint;
+                cout<<"Choose starting vertex between 0 and " << numOfVertices-1 <<":";
+                cin>>startingPoint;
+
+                if(startingPoint<0 or startingPoint>numOfVertices-1){
+                    cout<<"\nWrong parameter!!\n";
+                }
+                else{
+                    Dijkstra_matrix(startingPoint);
+                }
+                break;
+            }
+            case 4:{
+
+                int startingPoint;
+                cout<<"Choose starting vertex between 0 and " << numOfVertices-1 <<":";
+                cin>>startingPoint;
+
+                if(startingPoint<0 or startingPoint>numOfVertices-1){
+                    cout<<"\nWrong parameter!!\n";
+                }
+                else{
+                    Dijkstra_list(startingPoint);
+                }
+                break;
+
+                break;
+            }
+            case 5:{
+                int startingPoint;
+                cout<<"Choose starting vertex between 0 and " << numOfVertices-1 <<":";
+                cin>>startingPoint;
+
+                if(startingPoint<0 or startingPoint>numOfVertices-1){
+                    cout<<"\nWrong parameter!!\n";
+                }
+                else{
+                    BellmanFord_matrix(startingPoint);
+                }
+                break;
+                break;
+            }
+            case 6:{
+                int startingPoint;
+                cout<<"Choose starting vertex between 0 and " << numOfVertices-1 <<":";
+                cin>>startingPoint;
+
+                if(startingPoint<0 or startingPoint>numOfVertices-1){
+                    cout<<"\nWrong parameter!!\n";
+                }
+                else{
+                    BellmanFord_list(startingPoint);
+                }
+                break;
+                break;
+            }
+            case 7:{
+                printAdjacencyList();
+                printMatrix();
+                break;
+            }
+        }
+    }
+}
+
 void ShortestPath::generateGraphFromFile() {
 
         string fileName;
@@ -51,22 +160,17 @@ void ShortestPath::generateGraphFromFile() {
             p -> weight = weight;                           // ustawiam wage
             adjList [v1] = p;                            // wstawiam na pierwsze miejsce tzn, ze w adjList[] bedzie teraz wskaznik na niego
 
-            p = new AdjNode;                          // analogicznie tworze relacje dla v2
-            p -> neighbour = v1;
-            p -> next = adjList[v2];
-            p -> weight = weight;
-            adjList[v2] = p;
-
             // wpisuje wage w pola macierzy sasiedzctw
             graph[v1][v2] = weight;
-            graph[v2][v1] = weight;
-
         }
-
 }
 
 void ShortestPath::generateGraph(int n, double d) {
-
+    if (d > 1 or d <= 0 or n<=0 ){
+        cout<<"\n WRONG PARAMETERS!!";
+        return;
+    }
+    cout<<"\nGenerating graph with "<<n<<" vertices and density" << d <<endl;
     srand(time(NULL));
     numOfVertices = n;
     density = d;
@@ -103,7 +207,7 @@ void ShortestPath::generateGraph(int n, double d) {
                 newNode->neighbour = randV2;
                 newNode->next = adjList[randV1];
                 adjList[randV1] = newNode;
-                cout<<"\n Udalo sie. V1: "<<randV1<<" V2:"<<randV2<<" waga:"<<randWeight;
+                cout<<"\n Added:   V1: "<<randV1<<" V2:"<<randV2<<" weight:"<<randWeight;
 
             } else {
                 srand(time(NULL));
@@ -141,11 +245,6 @@ void ShortestPath::printMatrix() {
     for(int i = 0; i < numOfVertices; i++){
         cout << setw(6) << i;                               // drukowanie numerow kolumn
     }
-//    cout<<endl;
-//    cout << setw(6) << " ";
-//    for(int i = 0; i < numOfVertices; i++){
-//        cout << setfill('-');                               // drukowanie numerow kolumn
-//    }
 
     cout<<endl;
 
@@ -156,50 +255,11 @@ void ShortestPath::printMatrix() {
         }
         cout<<endl;
     }
+    cout<<endl<<endl;
 
 }
 
 void ShortestPath::Dijkstra_list(int startingV) {
-    /*
-    int u, j;
-    bool *visited;
-
-    distance = new long long [numOfVertices];
-    prev = new int [numOfVertices];
-    visited = new bool [numOfVertices];
-
-    for(int i=0; i<numOfVertices; i++){
-        // TODO: tu wstawić infinity
-        distance[i] = 99999999999;
-        prev[i] = -1;
-        visited[i] = false;
-    }
-
-    distance[startingV] = 0;
-
-    for(int i = 0; i < numOfVertices; i++){
-        for(j=0; visited[j]; j++);
-        for(u = j++; j<numOfVertices; j++){
-            if(!visited[j] && (distance[j] < distance[u])){         // sprawdzam czy wierzchołek nie został jeszcze
-                u = j;                                              // odwiedzony i ma najmiejsza odleglosc
-            }                                                       // jesli tak to u = j
-            visited[u] = true;                                      // ustawiam u na odwiedzony
-        }
-
-        for(p = adjList[u]; p; p = p->next){    // sprawdzam czy znaleziona została nowa najkrotsza sciezka do v przez u
-            if(!visited[p->neighbour] && (distance[p->neighbour] > distance[u] + p->weight)){
-                distance[p->neighbour] = distance[u] + p->weight;
-                prev[p->neighbour] = u;                    // ustawiam u jako poprzednika v
-            }
-        }
-    }
-
-    printPath(startingV);                       // drukowanie najkrotszych sciezek z wierzcholka startowego
-
-    delete distance;
-    delete prev;
-    delete visited;
-    */
 
     long long* distance = new long long[numOfVertices];
     int* prev = new int[numOfVertices];
@@ -253,7 +313,7 @@ void ShortestPath::Dijkstra_list(int startingV) {
             std::cout << ")" << std::endl;
         }
     }
-
+    cout<<"\n\n";
     delete[] distance;
     delete[] prev;
     delete[] QS;
@@ -262,48 +322,6 @@ void ShortestPath::Dijkstra_list(int startingV) {
 }
 
 void ShortestPath::Dijkstra_matrix(int startingV) {
-    /*
-    int u, j;
-    bool *visited;
-
-    distance = new long long [numOfVertices];
-    prev = new int [numOfVertices];
-    visited = new bool [numOfVertices];
-
-    for(int i=0; i<numOfVertices; i++){
-        // TODO: tu wstawić infinity
-        distance[i] = 99999999999;
-        prev[i] = -1;
-        visited[i] = false;
-    }
-
-
-    distance[startingV] = 0;
-
-
-    for(int i = 0; i < numOfVertices; i++){
-        for(j=0; visited[j]; j++);
-        for(u = j++; j<numOfVertices; j++){
-            if(!visited[j] && (distance[j] < distance[u])){         // sprawdzam czy wierzchołek nie został jeszcze
-                u = j;                                              // odwiedzony i ma najmiejsza odleglosc
-            }                                                       // jesli tak to u = j
-            visited[u] = true;                                      // ustawiam u na odwiedzony
-        }
-
-        for(int v=0; v<numOfVertices; v++){    // sprawdzam czy znaleziona została nowa najkrotsza sciezka do v przez u
-            if(graph[u][v]!=0 && (distance[v] > distance[u] + graph[u][v])){
-                distance[v] = distance[u] + graph[u][v];
-                prev[v] = u;                    // ustawiam u jako poprzednika v
-            }
-        }
-    }
-
-    printPath(startingV);                       // drukowanie najkrotszych sciezek z wierzcholka startowego
-
-    delete distance;
-    delete prev;
-    delete visited;
-     */
 
 
     long long* distance = new long long[numOfVertices];
@@ -353,7 +371,7 @@ void ShortestPath::Dijkstra_matrix(int startingV) {
             std::cout << ")" << std::endl;
         }
     }
-
+    cout<<"\n\n";
     delete[] distance;
     delete[] prev;
     delete[] QS;
@@ -367,7 +385,7 @@ void ShortestPath::BellmanFord_matrix(int startingV) {
     int* prev = new int[numOfVertices];
 
     for (int i = 0; i < numOfVertices; ++i) {
-        distance[i] = 99999999;
+        distance[i] = 9999999;
         prev[i] = -1;
     }
 
@@ -383,7 +401,6 @@ void ShortestPath::BellmanFord_matrix(int startingV) {
                     prev[v] = u;
                 }
             }
-
         }
     }
 
@@ -392,7 +409,7 @@ void ShortestPath::BellmanFord_matrix(int startingV) {
 
     for (int i = 0; i < numOfVertices; ++i) {
         std::cout << "Shortest path from: " << startingV << " to: " << i << ": ";
-        if (distance[i] == std::numeric_limits<long long>::max()) {
+        if (distance[i] == 9999999) {
             std::cout << "NO PATH" << std::endl;
         } else {
             std::cout << distance[i] << " (previous: ";
@@ -414,8 +431,10 @@ void ShortestPath::BellmanFord_list(int startingV) {
     long long* distance = new long long[numOfVertices];
     int* prev = new int[numOfVertices];
 
+    cout<<endl<<"Bellman-Ford algoritm (list)\n";
+
     for (int i = 0; i < numOfVertices; ++i) {
-        distance[i] = 999999999;
+        distance[i] = 9999999;
         prev[i] = -1;
     }
 
@@ -437,15 +456,6 @@ void ShortestPath::BellmanFord_list(int startingV) {
                     }
                 }
             }
-
-//            for (int v = 0; v < numOfVertices; v++) {
-//                if (graph[u][v] != 0 && distance[v] > distance[u] + graph[u][v]) {
-//                    distance[v] = distance[u] + graph[u][v];
-//                    // cout<<"dystans dla: " <<v<<" to teraz " <<distance[v]<<endl;
-//                    prev[v] = u;
-//                }
-//            }
-
         }
     }
 
@@ -454,7 +464,7 @@ void ShortestPath::BellmanFord_list(int startingV) {
 
     for (int i = 0; i < numOfVertices; ++i) {
         std::cout << "Shortest path from: " << startingV << " to: " << i << ": ";
-        if (distance[i] == std::numeric_limits<long long>::max()) {
+        if (distance[i] == 9999999) {
             std::cout << "NO PATH" << std::endl;
         } else {
             std::cout << distance[i] << " (previous: ";
@@ -466,7 +476,7 @@ void ShortestPath::BellmanFord_list(int startingV) {
             std::cout << ")" << std::endl;
         }
     }
-
+    cout<<"\n\n";
     delete[] distance;
     delete[] prev;
 

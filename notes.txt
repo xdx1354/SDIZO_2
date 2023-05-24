@@ -7,5 +7,10 @@ ale w reszcie należy to uwzględnić.
 
 
 TODO:
-    - krawedzie dla SCIEZKi maja byc skierowane`
-    - losowanie danych
+    - krawedzie dla SCIEZKi maja byc skierowane (generowanie z pliku)
+    - menu
+    - testowanie
+    - porzadek w kodzie
+    - nieistniejace krawedzi powinny być INFINITY
+    - BELLMAN-FORD, dla nieistniejacej sciezki ma byc NOPATH jak w dijkstrze
+    - nie dziala generowanie loswego grafu

@@ -9,8 +9,77 @@
 
 using namespace std;
 
-//TODO:
+void MST::menu_MST() {
+
+    cout<<"\n\nMENU MST\n\n";
+
+    int x = -1;
+    while(x!=0){
+        cout<<"\n------------------------------------------------------\n";
+        cout<<"1. Generate new random graph\n";
+        cout<<"2. Generate new graph from file\n";
+        cout<<"3. Test Prim algorithm (Matrix)\n";
+        cout<<"4. Test Prim algorithm (Adjacency  list)\n";
+        cout<<"5. Test Kruskal algorithm (Matrix)\n";
+        cout<<"6. Test Kruskal algorithm (Adjacency  list)\n";
+        cout<<"7. Print graph (as matrix and as adjacency list)\n";
+        cout<<"0. Exit\n";
+        cout<<"\nChoose task: \n";
+        cin>>x;
+        switch(x){
+            default:{
+                cout<<"Wrong number.\n";
+                break;
+            }
+            case 0:{
+                //eXIT
+
+                break;
+            }
+
+            case 1:{
+                int n,d;
+                cout<<"\nChoose number of vertices in graph: ";
+                cin>>n;
+                cout<<"\nChoose density of graph: ";
+                cin>>d;
+                generateGraph(n,d);
+                cout<<"DONE";
+                break;
+            }
+            case 2:{
+                generateGraphFromFile();
+                cout<<"DONE";
+                break;
+            }
+            case 3:{
+                prim_matrix();
+                break;
+            }
+            case 4:{
+                prim_list();
+                break;
+            }
+            case 5:{
+                kruskal_matrix();
+                break;
+            }
+            case 6:{
+                kruskal_list();
+                break;
+            }
+            case 7:{
+                printAdjacencyList();
+                printMatrix();
+                break;;
+            }
+        }
+    }
+
+}
+
 void MST::generateGraph(int n, double d) {
+    cout<<"\n\n";
     srand(time(NULL));
     numOfVertices = n;
     density = d;
@@ -68,10 +137,13 @@ void MST::generateGraph(int n, double d) {
         } while(tryAgain);                 // do skutku probuje na nowo wygenerowac krawedzi
 
     }
+    cout<<"\n\n";
+
 }
 
 //git
 void MST::generateGraphFromFile() {
+    cout<<"\n\n";
 
     string fileName;
 
@@ -125,11 +197,14 @@ void MST::generateGraphFromFile() {
         graph[v2][v1] = weight;
 
     }
+    cout<<"\n\n";
+
 }
 
 //git
 void MST::printMatrix() {
 
+    cout<<"\n\n";
     cout<<endl<<"ADJACENCY MATRIX"<<endl;
     cout << setw(6) << " ";
     for(int i = 0; i < numOfVertices; i++){
@@ -150,12 +225,13 @@ void MST::printMatrix() {
         }
         cout<<endl;
     }
+    cout<<"\n\n";
 
 }
 
 //git
 void MST::printAdjacencyList() {
-
+    cout<<"\n\n";
     cout<<endl<<"ADJACENCY LIST"<<endl;
     cout<< "ID_OF_VERTEX:  ID_OF_VERTEX <WEIGHT_OF_EDGE>";
     for(int i = 0; i < numOfVertices; i++){
@@ -171,6 +247,7 @@ void MST::printAdjacencyList() {
 
 //git
 void MST::prim_matrix(){
+    cout<<"\n\n";
 
 ///  WCZYTYWANIE DO KOLEJKI Z MACIERZY
     Queue *pq = new Queue();
@@ -212,12 +289,15 @@ void MST::prim_matrix(){
             currentNode  = currentNode -> next;
         }
     }
+    cout<<"\n\n";
+
     delete pq;
     delete[] parent;
 }
 
 // git, musialem zmienic kolejnosc argumentow w unionSets() tak by parent1 był korzeniem
 void MST::prim_list() {
+    cout<<"\n\n";
 
     /// ZAMIANA LIST NA PRIORITY QUEUE
     Queue *pq = new Queue();                    // tworze posortowana kolejkę krawedzi
@@ -275,6 +355,7 @@ void MST::prim_list() {
             currentNode  = currentNode -> next;
         }
     }
+    cout<<"\n\n";
     delete pq;
     delete[] parent;
 
@@ -307,6 +388,7 @@ void MST::prim_list() {
 //git
 void MST::kruskal_matrix() {
 
+    cout<<"\n\n";
 
     Queue *pq = new Queue();                    // tworze posortowana kolejkę krawedzi
     for(int i = 0; i < numOfVertices; i++){
@@ -340,6 +422,7 @@ void MST::kruskal_matrix() {
             edgeCount++;
         }
     }
+    cout<<"\n\n";
 
     delete pq;
     delete[] parent;                   // usuwam tablice, bo nie bedzie juz potrzebna
@@ -347,6 +430,7 @@ void MST::kruskal_matrix() {
 
 //git, ale nieoptymalnie chyba
 void MST::kruskal_list() {
+    cout<<"\n\n";
 
     auto *pq = new Queue();                    // tworze posortowana kolejkę krawedzi
 
@@ -394,6 +478,7 @@ void MST::kruskal_list() {
         }
     }
 
+    cout<<"\n\n";
     delete pq;
     delete[] parent;                   // usuwam tablice, bo nie bedzie juz potrzebna
 }
