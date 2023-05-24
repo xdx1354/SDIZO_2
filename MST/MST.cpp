@@ -500,3 +500,19 @@ void MST::unionSets(int v1, int v2, int* parent){            //laczenie dwóch p
     int parent2 = findParent(v2, parent);
     parent[parent1] = parent2;                      //przypisanie korzenia jednego poddrzewa do drugiego
 }
+
+void MST::autoTest() {
+
+    for(int i = 1; i<=5; i++){
+        numOfEdges = i * 10;
+        double list[4] = {0.25, 0.5, 0.75, 0.99};
+        for(double elem : list){
+            // cout<<"Generating grap"
+            generateGraph(numOfEdges, elem);                //gerowanie grafu o konkretnych parametrach
+
+        }
+
+
+
+    }
+}

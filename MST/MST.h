@@ -42,6 +42,7 @@ public:
 
     int findParent(int, int*);
     void unionSets(int, int, int*);
+    void autoTest();
 
 
 
