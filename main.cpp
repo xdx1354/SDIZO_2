@@ -51,24 +51,30 @@ int main() {
         }
     }
 
+
+//    mst.autoTest()
 //    int tmpEdges = 4;
 //    int tmpVertexes = 5;
 //
 
 
 //    MST mst = * new MST();
-//    mst.generateGraph(10, 0.99);
-//    mst.generateGraphFromFile();
+//    mst.generateGraph(5, 0.6);
+mst.generateGraphFromFile();
 //    mst.printMatrix();
 //    mst.printAdjacencyList();
-//    cout<<"\n\nKRUSKAL MATRIX: \n";
-//    mst.kruskal_matrix();
-//    cout<<"\n\nKRUSKAL LIST: \n";
-//    mst.kruskal_list();
-//    cout<<"\n\nPRIM LIST: "<<endl;
-//    mst.prim_list();
-//    cout<<"\n\nPRIM MATRIX: "<<endl;
-//    mst.prim_matrix();
+
+//mst.printAdjacencyList();
+//mst.printMatrix();
+    cout<<"\n\nPRIM LIST: "<<endl;
+    mst.prim_list();
+    cout<<"\n\nPRIM MATRIX: "<<endl;
+    mst.prim_matrix();
+    cout<<"\n\nKRUSKAL MATRIX: \n";
+    mst.kruskal_matrix();
+    cout<<"\n\nKRUSKAL LIST: \n";
+    mst.kruskal_list();
+
 
 
 //    sp.generateGraph(10, 0.5);

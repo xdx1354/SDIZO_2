@@ -4,6 +4,7 @@
 
 #include "MST.h"
 #include "../structures/Queue.h"
+#include "../util/Time.h"
 #include<iostream>
 #include <bits/stdc++.h>
 
@@ -100,7 +101,7 @@ void MST::generateGraph(int n, double d) {
 
     for(int i=0; i<numOfEdges; i++){
 
-        int randWeight = rand() % 100000 + 1;
+        int randWeight = rand() % 100 + 1;
         int randV1 = rand() % numOfVertices;
         int randV2 = rand() % numOfVertices;
         bool tryAgain = false;
@@ -122,7 +123,7 @@ void MST::generateGraph(int n, double d) {
                 AdjNode *newNode2 = new AdjNode;                           // wstawiam do listy
                 newNode2->weight = randWeight;
                 newNode2->neighbour = randV1;
-                newNode2->next = adjList[randV1];
+                newNode2->next = adjList[randV2];
                 adjList[randV2] = newNode2;
 
                 cout<<"\n Udalo sie. V1: "<<randV1<<" V2:"<<randV2<<" waga:"<<randWeight;
@@ -273,6 +274,7 @@ void MST::prim_matrix(){
     unionSets(parent1, parent2, parent);                              // pierwszy set, parent2 będzie rodzicem całości
     int permParent = parent2;                                                // permParent to rodzic naszego poddrzewa rozpinającego
     cout << "Edge: " << firstNode->data.v1 << " - " << firstNode->data.v2 << ", weight: " << firstNode->data.weight <<endl;
+    pq->deleteFromBeginning();                                               // usuwam już dodany
 
     /// GŁOWNA CZEŚĆ FUNKCJI,
     for(int i = 1; i < numOfVertices - 1; i++){                             // wyszukiwanie określonej liczby krawędzi
@@ -283,11 +285,17 @@ void MST::prim_matrix(){
 
             if(parent1 != parent2 && (parent2 == permParent || parent1 == permParent )){            //sprawdza, nie ma pętli i czy krawedz jest sasiadujaca z drzewem co mam do tej pory
                 cout << "Edge: " << currentNode->data.v1 << " - " << currentNode->data.v2 << ", weight: " << currentNode->data.weight <<endl;
-                unionSets( parent1, parent2, parent);
+                if(parent2 == permParent){
+                    unionSets( parent1, parent2, parent);
+                }
+                else{
+                    unionSets( parent2,parent1, parent);
+                }
                 break;
             }
             currentNode  = currentNode -> next;
         }
+        //pq->deleteFromBeginning();
     }
     cout<<"\n\n";
 
@@ -295,22 +303,23 @@ void MST::prim_matrix(){
     delete[] parent;
 }
 
-// git, musialem zmienic kolejnosc argumentow w unionSets() tak by parent1 był korzeniem
+
 void MST::prim_list() {
     cout<<"\n\n";
 
     /// ZAMIANA LIST NA PRIORITY QUEUE
-    Queue *pq = new Queue();                    // tworze posortowana kolejkę krawedzi
+    auto *pq = new Queue();                    // tworze posortowana kolejkę krawedzi
 
     for(int i=0; i<numOfVertices; i++){         // iteruje po wierzchołkach
+
         AdjNode *firstNode = adjList[i];        // biore pierwsza krawedz
+
         while(firstNode != nullptr){            // petla iterujaca po wszystkich krawdziach tego wierzchołka
-            Queue::Edge e;                      // nowa krawedz do dodania do kolejki
+            Queue::Edge e{};                      // nowa krawedz do dodania do kolejki
             e.v1 = i;
             e.v2 = firstNode -> neighbour;
             e.weight = firstNode -> weight;
 
-/// Bez tej czesci będą w kolejce duplikaty, ale i tak algorytmy sprawdzaja czy nie ma petli, a duplikaty beda traktowane jako petle
             Queue::Node *tmp = pq -> head;      // zmienna pomocnicza do przeszukiwania kolejki
             bool present = false;
             while(tmp != nullptr){              //przesukuje kolejke by sprawdzic czy nie mam tej krawedzi, ale w druga strone
@@ -320,9 +329,11 @@ void MST::prim_list() {
                 }
                 tmp = tmp -> next;              // przechodze do kolejnego elementu kolejki
             }
+
             if(!present){
-            pq->insert(e);                  // jesli nie ma to dodajemy
+                pq->insert(e);                  // jesli nie ma to dodajemy
             }
+
             firstNode = firstNode -> next;      // i przechodzimy do kolejnej krawedzi dla tego wierzcholka
         }
     }
@@ -332,30 +343,37 @@ void MST::prim_list() {
     int* parent = new int[numOfVertices];
     fill(parent, parent + numOfVertices, -1);
 
-    /// WYBIERANIE POCZĄTKOWEGO WIERZCHOŁKA OD KTÓREGO ZACZYNA SIE ALGORYTM (NA BAZIE KRAWĘDZI O NAJMNIEJSZEJ WADZE)
+/// WYBIERANIE POCZĄTKOWEGO WIERZCHOŁKA OD KTÓREGO ZACZYNA SIE ALGORYTM (NA BAZIE KRAWĘDZI O NAJMNIEJSZEJ WADZE)
     Queue::Node* firstNode = pq->head;                                       // losowa krawędzi
     int parent1 = findParent(firstNode->data.v1, parent);              // szukam korzenia poddrzewa, do którego należy v1
     int parent2 = findParent(firstNode->data.v2, parent);              // szukam korzenia poddrzewa, do którego należy v2
     unionSets(parent1, parent2, parent);                              // pierwszy set, parent2 będzie rodzicem całości
     int permParent = parent2;                                                // permParent to rodzic naszego poddrzewa rozpinającego
     cout << "Edge: " << firstNode->data.v1 << " - " << firstNode->data.v2 << ", weight: " << firstNode->data.weight <<endl;
+    pq->deleteFromBeginning();
 
-    /// GŁOWNA CZEŚĆ FUNKCJI
+    /// GŁOWNA CZEŚĆ FUNKCJI,
     for(int i = 1; i < numOfVertices - 1; i++){                             // wyszukiwanie określonej liczby krawędzi
         Queue::Node* currentNode = pq->head;
         while(currentNode != nullptr){                                      // znalezienie najmniejszej krawędzi, która nam pasuje
-            parent1 = findParent(currentNode->data.v1, parent);       // szukam korzenia poddrzewa, do którego należy v1
-            parent2 = findParent(currentNode->data.v2, parent);       // szukam korzenia poddrzewa, do którego należy v2
+            parent1 = findParent(currentNode->data.v1, parent);       //szukam korzenia poddrzewa, do którego należy v1
+            parent2 = findParent(currentNode->data.v2, parent);       //szukam korzenia poddrzewa, do którego należy v2
 
-            if(parent1 != parent2 && (parent2 == permParent || parent1 == permParent )){            // sprawdza, nie ma pętli i czy krawedz jest sasiadujaca z drzewem co mam do tej pory
+            if(parent1 != parent2 && (parent2 == permParent || parent1 == permParent )){            //sprawdza, nie ma pętli i czy krawedz jest sasiadujaca z drzewem co mam do tej pory
                 cout << "Edge: " << currentNode->data.v1 << " - " << currentNode->data.v2 << ", weight: " << currentNode->data.weight <<endl;
-                unionSets( parent2, parent1, parent);
+                if(parent2 == permParent){
+                    unionSets( parent1, parent2, parent);
+                }
+                else{
+                    unionSets( parent2,parent1, parent);
+                }
                 break;
             }
             currentNode  = currentNode -> next;
         }
     }
     cout<<"\n\n";
+
     delete pq;
     delete[] parent;
 
@@ -502,17 +520,71 @@ void MST::unionSets(int v1, int v2, int* parent){            //laczenie dwóch p
 }
 
 void MST::autoTest() {
+    ofstream fout("pomiary.txt");
+    //string path = R"(D:\PWR\4 sem\SDIZO\Projekt2\tests\tests.txt)";
+    //fout.open("D:\\PWR\\4 sem\\SDIZO\\Projekt2\\tests\\tests.txt", fstream::out);
+    Time time;
+    int numOfTests = 10;
+    cout<<"Starting test of MST";
+    fout<<"----Test of MST----\n";
 
     for(int i = 1; i<=5; i++){
-        numOfEdges = i * 10;
+        numOfVertices = i * 10;
         double list[4] = {0.25, 0.5, 0.75, 0.99};
         for(double elem : list){
-            // cout<<"Generating grap"
-            generateGraph(numOfEdges, elem);                //gerowanie grafu o konkretnych parametrach
+
+            cout<<"\nStarting test numOfVertices = "<<numOfVertices<<", Density = "<<elem<<endl;
+            fout<<"\n\n Testing with params:\n Number of Vertices = " << numOfVertices;
+            fout<<"Density = "<<elem<<"\n\n";
+            generateGraph(numOfVertices, elem);                //gerowanie grafu o konkretnych parametrach
+
+            long long tempTime = 0;
+            for(int j=0; j<numOfTests; j++){
+
+                time.start();
+                cout<<"Prim Matrix\n";
+                prim_matrix();
+                time.stop();
+                tempTime+= time.returnTime()/numOfTests;
+
+            }
+            fout<<"Prim (matrix) avg time: " << tempTime;
+
+            tempTime = 0;
+            for(int j=0; j<numOfTests; j++){
+
+                time.start();
+                cout<<"Prim list\n";
+                prim_list();
+                time.stop();
+                tempTime+= time.returnTime()/numOfTests;
+
+            }
+            fout<<"Prim (list) avg time: " << tempTime;
+
+            tempTime = 0;
+            for(int j=0; j<numOfTests; j++){
+
+                time.start();
+                kruskal_matrix();
+                time.stop();
+                tempTime+= time.returnTime()/numOfTests;
+
+            }
+            fout<<"Kruskal (matrix) avg time: " << tempTime;
+
+            tempTime = 0;
+            for(int j=0; j<numOfTests; j++){
+
+                time.start();
+                kruskal_list();
+                time.stop();
+                tempTime+= time.returnTime()/numOfTests;
+
+            }
+            fout<<"Kruskal (list) avg time: " << tempTime;
 
         }
-
-
 
     }
 }
