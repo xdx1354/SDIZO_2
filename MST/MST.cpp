@@ -63,6 +63,7 @@ void MST::menu_MST() {
             }
             case 5:{
                 kruskal_matrix();
+
                 break;
             }
             case 6:{
@@ -211,11 +212,6 @@ void MST::printMatrix() {
     for(int i = 0; i < numOfVertices; i++){
         cout << setw(6) << i;                               // drukowanie numerow kolumn
     }
-//    cout<<endl;
-//    cout << setw(6) << " ";
-//    for(int i = 0; i < numOfVertices; i++){
-//        cout << setfill('-');                               // drukowanie numerow kolumn
-//    }
 
     cout<<endl;
 
@@ -247,7 +243,7 @@ void MST::printAdjacencyList() {
 }
 
 //git
-void MST::prim_matrix(){
+bool MST::prim_matrix(){
     cout<<"\n\n";
 
 ///  WCZYTYWANIE DO KOLEJKI Z MACIERZY
@@ -295,16 +291,21 @@ void MST::prim_matrix(){
             }
             currentNode  = currentNode -> next;
         }
+        if(currentNode == nullptr){
+            cout<<"NOT ENOUGH EDGES TO CREATE MST OR SOME NODES ARE NOT CONNECTED";
+            return false;
+        }
         //pq->deleteFromBeginning();
     }
     cout<<"\n\n";
 
     delete pq;
     delete[] parent;
+    return true;
 }
 
 
-void MST::prim_list() {
+bool MST::prim_list() {
     cout<<"\n\n";
 
     /// ZAMIANA LIST NA PRIORITY QUEUE
@@ -336,6 +337,7 @@ void MST::prim_list() {
 
             firstNode = firstNode -> next;      // i przechodzimy do kolejnej krawedzi dla tego wierzcholka
         }
+
     }
 
 
@@ -371,40 +373,21 @@ void MST::prim_list() {
             }
             currentNode  = currentNode -> next;
         }
+        if(currentNode == nullptr){
+            cout<<"NOT ENOUGH EDGES TO CREATE MST OR SOME NODES ARE NOT CONNECTED";
+            return false;
+        }
     }
     cout<<"\n\n";
 
     delete pq;
     delete[] parent;
-
-
-/*
-    int* parent = new int[numOfVertices];
-    fill(parent, parent + numOfVertices, -1);     //wypełaniam tablice -1 tzn ze dany wierzcholek jest
-    // korzeniem poddrzewa (poki co)
-    // GLOWNY ALGORYTM
-    int edgeCount = 0;
-    while(edgeCount < numOfVertices - 1){
-        Queue::Edge currentEdge = pq -> head -> data;           // pobieram krawedz o najmniejszej wadze
-        pq -> deleteFromBeginning();                            // usuwam ja z kolejki
-
-        int parent1 = findParent(currentEdge.v1, parent);       //szukam korzenia poddrzewa, do którego należy v1
-        int parent2 = findParent(currentEdge.v2, parent);       //szukam korzenia poddrzewa, do którego należy v2
-
-        if(parent1 != parent2){
-            cout << "Edge: " << currentEdge.v1 << " - " << currentEdge.v2 << ", weight: " << currentEdge. weight <<endl;
-            unionSets( parent1, parent2, parent);
-            edgeCount++;
-        }
-    }
-
-    delete pq;
-    delete[] parent;                   // usuwam tablice, bo nie bedzie juz potrzebna
-*/
+    return true;
 }
 
+
 //git
-void MST::kruskal_matrix() {
+bool MST::kruskal_matrix() {
 
     cout<<"\n\n";
 
@@ -428,6 +411,10 @@ void MST::kruskal_matrix() {
     // GLOWNY ALGORYTM
     int edgeCount = 0;
     while(edgeCount < numOfVertices - 1){
+        if(pq->head == nullptr){
+            cout<<"NOT ENOUGH EDGES TO CREATE MST OR SOME NODES ARE NOT CONNECTED";
+            return false;
+        }
         Queue::Edge currentEdge = pq -> head -> data;           // pobieram krawedz o najmniejszej wadze
         pq -> deleteFromBeginning();                            // usuwam ja z kolejki
 
@@ -444,10 +431,11 @@ void MST::kruskal_matrix() {
 
     delete pq;
     delete[] parent;                   // usuwam tablice, bo nie bedzie juz potrzebna
+    return true;
 }
 
 //git, ale nieoptymalnie chyba
-void MST::kruskal_list() {
+bool MST::kruskal_list() {
     cout<<"\n\n";
 
     auto *pq = new Queue();                    // tworze posortowana kolejkę krawedzi
@@ -460,19 +448,18 @@ void MST::kruskal_list() {
             e.v2 = firstNode -> neighbour;
             e.weight = firstNode -> weight;
 
-/// Bez tej czesci będą w kolejce duplikaty, ale i tak algorytmy sprawdzaja czy nie ma petli, a duplikaty beda traktowane jako petle
-//            Queue::Node *tmp = pq -> head;      // zmienna pomocnicza do przeszukiwania kolejki
-//            bool present = false;
-//            while(tmp != nullptr){              //przesukuje kolejke by sprawdzic czy nie mam tej krawedzi, ale w druga strone
-//                if((tmp->data.v2 == e.v2 && tmp->data.v1 == e.v1)||(tmp->data.v2 == e.v1 && tmp->data.v1 == e.v2)){
-//                    present = true;             // jesli jest juz to wychodzimy
-//                    break;
-//                }
-//                tmp = tmp -> next;              // przechodze do kolejnego elementu kolejki
-//            }
-//            if(!present){
+            Queue::Node *tmp = pq -> head;      // zmienna pomocnicza do przeszukiwania kolejki
+            bool present = false;
+            while(tmp != nullptr){              //przesukuje kolejke by sprawdzic czy nie mam tej krawedzi, ale w druga strone
+                if((tmp->data.v2 == e.v2 && tmp->data.v1 == e.v1)||(tmp->data.v2 == e.v1 && tmp->data.v1 == e.v2)){
+                    present = true;             // jesli jest juz to wychodzimy
+                    break;
+                }
+                tmp = tmp -> next;              // przechodze do kolejnego elementu kolejki
+            }
+            if(!present){
                 pq->insert(e);                  // jesli nie ma to dodajemy
-//            }
+           }
             firstNode = firstNode -> next;      // i przechodzimy do kolejnej krawedzi dla tego wierzcholka
         }
     }
@@ -483,6 +470,10 @@ void MST::kruskal_list() {
     // GLOWNY ALGORYTM
     int edgeCount = 0;
     while(edgeCount < numOfVertices - 1){
+        if(pq->head == nullptr){
+            cout<<"NOT ENOUGH EDGES TO CREATE MST OR SOME NODES ARE NOT CONNECTED";
+            return false;
+        }
         Queue::Edge currentEdge = pq -> head -> data;           // pobieram krawedz o najmniejszej wadze
         pq -> deleteFromBeginning();                            // usuwam ja z kolejki
 
@@ -499,6 +490,7 @@ void MST::kruskal_list() {
     cout<<"\n\n";
     delete pq;
     delete[] parent;                   // usuwam tablice, bo nie bedzie juz potrzebna
+    return true;
 }
 
 
@@ -520,69 +512,114 @@ void MST::unionSets(int v1, int v2, int* parent){            //laczenie dwóch p
 }
 
 void MST::autoTest() {
-    ofstream fout("pomiary.txt");
-    //string path = R"(D:\PWR\4 sem\SDIZO\Projekt2\tests\tests.txt)";
+    string path = R"(D:\PWR\4 sem\SDIZO\Projekt2\tests\tests.txt)";
+    ofstream fout(path);
     //fout.open("D:\\PWR\\4 sem\\SDIZO\\Projekt2\\tests\\tests.txt", fstream::out);
     Time time;
     int numOfTests = 10;
     cout<<"Starting test of MST";
     fout<<"----Test of MST----\n";
 
-    for(int i = 1; i<=5; i++){
+    for(int i = 1; i<=2; i++){
         numOfVertices = i * 10;
-        double list[4] = {0.25, 0.5, 0.75, 0.99};
+        double list[1] = {0.25};        ///0.5, 0.75, 0.99
         for(double elem : list){
 
             cout<<"\nStarting test numOfVertices = "<<numOfVertices<<", Density = "<<elem<<endl;
-            fout<<"\n\n Testing with params:\n Number of Vertices = " << numOfVertices;
-            fout<<"Density = "<<elem<<"\n\n";
+            fout<<"\n\nTesting with params:\nNumber of Vertices = " << numOfVertices;
+            fout<<", Density = "<<elem<<"\n\n";
             generateGraph(numOfVertices, elem);                //gerowanie grafu o konkretnych parametrach
 
+            int validTests = 0;
             long long tempTime = 0;
             for(int j=0; j<numOfTests; j++){
 
                 time.start();
-                cout<<"Prim Matrix\n";
-                prim_matrix();
+                cout<<"\n\nPrim Matrix\n";
+                bool valid = prim_matrix();
+                if(valid){
+                    validTests++;
+                }
                 time.stop();
                 tempTime+= time.returnTime()/numOfTests;
 
             }
-            fout<<"Prim (matrix) avg time: " << tempTime;
+            if(validTests == numOfTests){
+                fout<<"Prim (matrix) avg time: " << tempTime<<endl;
+                cout<<"Prim (matrix) avg time: " << tempTime;
+            }
+            else{
+                fout<<"Not enough valid tests!";
+                cout<<"Not enough valid tests!";
+            }
 
+            validTests = 0;
             tempTime = 0;
             for(int j=0; j<numOfTests; j++){
 
                 time.start();
-                cout<<"Prim list\n";
-                prim_list();
+                cout<<"\n\nPrim list\n";
+                bool valid = prim_list();
+                if(valid){
+                    validTests++;
+                }
                 time.stop();
                 tempTime+= time.returnTime()/numOfTests;
 
             }
-            fout<<"Prim (list) avg time: " << tempTime;
+            if(validTests == numOfTests){
+                fout<<"Prim (list) avg time: " << tempTime<<endl;
+                cout<<"Prim (list) avg time: " << tempTime;
+            }
+            else{
+                fout<<"Not enough valid tests!";
+                cout<<"Not enough valid tests!";
+            }
 
+            validTests = 0;
             tempTime = 0;
             for(int j=0; j<numOfTests; j++){
 
                 time.start();
-                kruskal_matrix();
+                cout<<"\n\nKruskal matrix\n";
+                bool valid = kruskal_matrix();
+                if(valid){
+                    validTests++;
+                }
                 time.stop();
                 tempTime+= time.returnTime()/numOfTests;
 
             }
-            fout<<"Kruskal (matrix) avg time: " << tempTime;
+            if(validTests == numOfTests){
+                fout<<"Kruskal (matrix) avg time: " << tempTime<<endl;
+                cout<<"Kruskal (matrix) avg time: " << tempTime;
+            }
+            else{
+                fout<<"Not enough valid tests!";
+                cout<<"Not enough valid tests!";
+            }
 
+
+            validTests = 0;
             tempTime = 0;
             for(int j=0; j<numOfTests; j++){
 
                 time.start();
-                kruskal_list();
+                cout<<"\n\nKruskal list\n";
+                bool valid = kruskal_list();
+                if(valid){
+                    validTests++;
+                }
                 time.stop();
                 tempTime+= time.returnTime()/numOfTests;
 
             }
-            fout<<"Kruskal (list) avg time: " << tempTime;
+            if(validTests == numOfTests){
+                fout<<"Kruskal (list) avg time: " << tempTime<<endl;
+            }
+            else{
+                fout<<"Not enough valid tests!";
+            }
 
         }
 

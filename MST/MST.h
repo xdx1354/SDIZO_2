@@ -34,11 +34,11 @@ public:
     void printAdjacencyList();
     void printMST();
 
-    void prim_matrix();
-    void prim_list();
+    bool prim_matrix();
+    bool prim_list();
 
-    void kruskal_matrix();
-    void kruskal_list();
+    bool kruskal_matrix();
+    bool kruskal_list();
 
     int findParent(int, int*);
     void unionSets(int, int, int*);

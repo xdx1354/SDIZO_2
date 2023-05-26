@@ -13,4 +13,6 @@ TODO:
     - porzadek w kodzie
     - nieistniejace krawedzi powinny być INFINITY
     - BELLMAN-FORD, dla nieistniejacej sciezki ma byc NOPATH jak w dijkstrze
-    - nie dziala generowanie loswego grafu
+    - dodac sprawdzanie czy mst VALID w zwyklych wywolaniach kruskala i Prima
+    - zrobić z Prima bool i dodać by zwracał prawdę jesli utworzone drzewo jest równe numOfVertices - 1
+    - czyli gdy szuka poprawnego wierzchołka i dojdzie do konca PQ to ma return false;

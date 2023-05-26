@@ -1,0 +1,15 @@
+----Test of MST----
+
+
+Testing with params:
+Number of Vertices = 10, Density = 0.25
+
+Not enough valid tests!Not enough valid tests!Not enough valid tests!Not enough valid tests!
+
+Testing with params:
+Number of Vertices = 20, Density = 0.25
+
+Prim (matrix) avg time: 23520760
+Prim (list) avg time: 27069370
+Kruskal (matrix) avg time: 23967660
+Kruskal (list) avg time: 24136230
