@@ -4,6 +4,7 @@
 
 #include "ShortestPath.h"
 #include "../structures/Queue.h"
+#include "../util/Time.h"
 #include<iostream>
 #include <bits/stdc++.h>
 using namespace std;
@@ -38,7 +39,8 @@ void ShortestPath::menu_Path() {
             }
 
             case 1:{
-                int n,d;
+                int n;
+                double d;
                 cout<<"\nChoose number of vertices in graph: ";
                 cin>>n;
                 cout<<"\nChoose density of graph: ";
@@ -60,7 +62,7 @@ void ShortestPath::menu_Path() {
                     cout<<"\nWrong parameter!!\n";
                 }
                 else{
-                    Dijkstra_matrix(startingPoint);
+                    dijkstraMatrix(startingPoint);
                 }
                 break;
             }
@@ -74,7 +76,7 @@ void ShortestPath::menu_Path() {
                     cout<<"\nWrong parameter!!\n";
                 }
                 else{
-                    Dijkstra_list(startingPoint);
+                    dijkstraList(startingPoint);
                 }
                 break;
 
@@ -89,7 +91,7 @@ void ShortestPath::menu_Path() {
                     cout<<"\nWrong parameter!!\n";
                 }
                 else{
-                    BellmanFord_matrix(startingPoint);
+                    bellmanFordMatrix(startingPoint);
                 }
                 break;
                 break;
@@ -103,7 +105,7 @@ void ShortestPath::menu_Path() {
                     cout<<"\nWrong parameter!!\n";
                 }
                 else{
-                    BellmanFord_list(startingPoint);
+                    bellmanFordList(startingPoint);
                 }
                 break;
                 break;
@@ -259,7 +261,7 @@ void ShortestPath::printMatrix() {
 
 }
 
-void ShortestPath::Dijkstra_list(int startingV) {
+void ShortestPath::dijkstraList(int startingV) {
 
     long long* distance = new long long[numOfVertices];
     int* prev = new int[numOfVertices];
@@ -321,7 +323,7 @@ void ShortestPath::Dijkstra_list(int startingV) {
 
 }
 
-void ShortestPath::Dijkstra_matrix(int startingV) {
+void ShortestPath::dijkstraMatrix(int startingV) {
 
 
     long long* distance = new long long[numOfVertices];
@@ -379,7 +381,7 @@ void ShortestPath::Dijkstra_matrix(int startingV) {
 
 }
 
-void ShortestPath::BellmanFord_matrix(int startingV) {
+void ShortestPath::bellmanFordMatrix(int startingV) {
 
     long long* distance = new long long[numOfVertices];
     int* prev = new int[numOfVertices];
@@ -427,7 +429,7 @@ void ShortestPath::BellmanFord_matrix(int startingV) {
 }
 
 
-void ShortestPath::BellmanFord_list(int startingV) {
+void ShortestPath::bellmanFordList(int startingV) {
     long long* distance = new long long[numOfVertices];
     int* prev = new int[numOfVertices];
 
@@ -508,3 +510,87 @@ void ShortestPath::printPath(int startingV) {
     }
 }
 
+void ShortestPath::autoTest() {
+    string path = R"(D:\PWR\4 sem\SDIZO\Projekt2\tests\tests2.txt)";
+    ofstream fout(path);
+    Time myTime;
+    srand(time(NULL));
+    int numOfTests = 10;
+    cout<<"Starting test of Shortest Path";
+    fout<<"----Test of Shortest Path----\n";
+
+    for(int i = 1; i<=2; i++){
+        numOfVertices = i * 10;
+        double list[2] = {0.25, 0.5};        ///0.5, 0.75, 0.99
+        for(double elem : list){
+
+            cout<<"\nStarting test numOfVertices = "<<numOfVertices<<", Density = "<<elem<<endl;
+            fout<<"\n\nTesting with params:\nNumber of Vertices = " << numOfVertices;
+            fout<<", Density = "<<elem<<"\n\n";
+            generateGraph(numOfVertices, elem);                //gerowanie grafu o konkretnych parametrach
+
+            long long tempTime = 0;
+            for(int j=0; j<numOfTests; j++){
+
+                int startingV = rand()%numOfVertices+1;
+                myTime.start();
+                cout<<"\n\nDijkstra Matrix\n";
+                dijkstraMatrix(startingV);
+                myTime.stop();
+                tempTime+= myTime.returnTime() / numOfTests;
+
+            }
+            fout<<"Dijkstra (matrix) avg myTime: " << tempTime<<endl;
+            cout<<"Dijkstra (matrix) avg myTime: " << tempTime<<endl;
+
+
+
+            tempTime = 0;
+            for(int j=0; j<numOfTests; j++){
+
+                int startingV = rand()%numOfVertices+1;
+                myTime.start();
+                cout<<"\n\nDijkstra list\n";
+                dijkstraList(startingV);
+                myTime.stop();
+                tempTime+= myTime.returnTime() / numOfTests;
+
+            }
+            fout<<"Dijkstra (list) avg myTime: " << tempTime<<endl;
+            cout<<"Dijkstra (list) avg myTime: " << tempTime<<endl;
+
+            tempTime = 0;
+            for(int j=0; j<numOfTests; j++){
+
+                int startingV = rand()%numOfVertices+1;
+                myTime.start();
+                cout<<"\n\nBellman-Ford matrix\n";
+                bellmanFordMatrix(startingV);
+                myTime.stop();
+                tempTime+= myTime.returnTime() / numOfTests;
+
+            }
+            fout<<"Bellman-Ford (matrix) avg myTime: " << tempTime<<endl;
+            cout<<"Bellman-Ford (matrix) avg myTime: " << tempTime<<endl;
+
+
+            tempTime = 0;
+            for(int j=0; j<numOfTests; j++){
+
+                int startingV = rand()%numOfVertices+1;
+                myTime.start();
+                cout<<"\n\nBellman-Ford list\n";
+                bellmanFordList(startingV);
+                myTime.stop();
+                tempTime+= myTime.returnTime() / numOfTests;
+
+            }
+            fout<<"Bellman-Ford (list) avg myTime: " << tempTime<<endl;
+            cout<<"Bellman-Ford (list) avg myTime: " << tempTime<<endl;
+
+        }
+
+    }
+
+
+}

@@ -8,11 +8,9 @@ ale w reszcie należy to uwzględnić.
 
 TODO:
     - krawedzie dla SCIEZKi maja byc skierowane (generowanie z pliku)
-    - menu
+    - menu SHORTEST PATH
     - testowanie
     - porzadek w kodzie
     - nieistniejace krawedzi powinny być INFINITY
     - BELLMAN-FORD, dla nieistniejacej sciezki ma byc NOPATH jak w dijkstrze
-    - dodac sprawdzanie czy mst VALID w zwyklych wywolaniach kruskala i Prima
-    - zrobić z Prima bool i dodać by zwracał prawdę jesli utworzone drzewo jest równe numOfVertices - 1
-    - czyli gdy szuka poprawnego wierzchołka i dojdzie do konca PQ to ma return false;
+    - dodać nowe generowanie grafow w Shortest Path z uwzględnieniem tego, że jest to graf skierowany

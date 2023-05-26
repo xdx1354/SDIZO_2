@@ -28,6 +28,7 @@ public:
     long long *distance;                // tablica z kosztami dojscia do poszczegolnych wierzchołków
 
     void menu_Path();
+    void autoTest();
     void generateGraphFromFile();
     void generateGraph(int n, double d);
 
@@ -35,11 +36,11 @@ public:
     void printAdjacencyList();
     void printPath(int startingV);
 
-    void Dijkstra_matrix(int startingV);
-    void Dijkstra_list(int startingV);
+    void dijkstraMatrix(int startingV);
+    void dijkstraList(int startingV);
 
-    void BellmanFord_matrix(int startingV);
-    void BellmanFord_list(int startingV);
+    void bellmanFordMatrix(int startingV);
+    void bellmanFordList(int startingV);
 };
 
 

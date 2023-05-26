@@ -33,13 +33,14 @@ void MST::menu_MST() {
                 break;
             }
             case 0:{
-                //eXIT
+                cout<<"\n\n";
 
                 break;
             }
 
             case 1:{
-                int n,d;
+                int n;
+                double d;
                 cout<<"\nChoose number of vertices in graph: ";
                 cin>>n;
                 cout<<"\nChoose density of graph: ";

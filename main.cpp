@@ -51,8 +51,8 @@ int main() {
         }
     }
 
-
-    mst.autoTest();
+    sp.autoTest();
+//    mst.autoTest();
 //mst.generateGraph(10, 0.6);
 
 //    int tmpEdges = 4;
@@ -84,8 +84,8 @@ int main() {
 ////    sp.generateGraph(10, 0.5);
 ////    sp.printMatrix();
 ////    sp.printAdjacencyList();
-////    sp.Dijkstra_matrix(5);
-////    sp.Dijkstra_list(5);
-//    sp.BellmanFord_matrix(5);
-//    sp.BellmanFord_list(5);
+////    sp.dijkstraMatrix(5);
+////    sp.dijkstraList(5);
+//    sp.bellmanFordMatrix(5);
+//    sp.bellmanFordList(5);
 }
