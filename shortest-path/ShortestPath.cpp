@@ -176,13 +176,14 @@ void ShortestPath::generateGraph(int n, double d) {
     srand(time(NULL));
     numOfVertices = n;
     density = d;
-    numOfEdges = ((n*(n-1))/2 )*d;              // TODO: chyba bez /2 skoro skierowane krawedzi
+    numOfEdges = (n*(n-1))*d;
+    int maxEdges = n*(n-1);
 
     adjList = new AdjNode * [numOfVertices];
 
     graph = new int *[numOfVertices];
 
-    /// TWORZE STRUKTURY I WYPELNIAM JE PUSTYMI WARTOSCIAMI
+/*    /// TWORZE STRUKTURY I WYPELNIAM JE PUSTYMI WARTOSCIAMI
     for(int i =0; i < numOfVertices; i++){
         graph[i] = new int [numOfVertices];             // Tworzenie dwuwymiarowej tablicy - dokladanie drugiego wymiaru
         adjList[i] = NULL;
@@ -219,6 +220,126 @@ void ShortestPath::generateGraph(int n, double d) {
 
             }
         } while(tryAgain);                 // do skutku probuje na nowo wygenerowac krawedzi
+
+    }*/
+
+
+    if(d>0.5){
+
+        /// TWORZE STRUKTURY I WYPELNIAM JE PUSTYMI WARTOSCIAMI
+        for(int i =0; i < numOfVertices; i++){
+            graph[i] = new int [numOfVertices];             // Tworzenie dwuwymiarowej tablicy - dokladanie drugiego wymiaru
+            adjList[i] = NULL;
+            for(int j =0; j < numOfVertices; j++){
+                if(i == j){
+                    graph[i][j] = 0;                        //TODO: zmenic na infinity
+                }
+                else{
+                    graph [i][j] = -1;                           // ustawiam w macierzy na brak relacji pomiedzy wierzcholkami
+                }
+            }
+        }
+
+        /// LOSUJE PUSTE KRAWEDZI I WSTAWIAM TAM 0
+        cout<<maxEdges <<" "<< numOfEdges;
+        for(int i = 0; i < maxEdges-numOfEdges; i++) {
+            int randV1 = rand() % numOfVertices;
+            int randV2 = rand() % numOfVertices;
+            bool tryAgain = false;
+            do {
+                tryAgain = false;
+                if (randV1 != randV2 &&
+                    graph[randV1][randV2] == -1) {                    // losuje do czasu gdy wylosuja sie dwa rozne
+
+                    graph[randV1][randV2] = 0;
+
+                    cout << "\n Udalo sie wstawic zero V1: " << randV1 << " V2:" << randV2;
+
+                } else {
+                    srand(time(NULL));
+                    randV1 = rand() % numOfVertices;
+                    randV2 = rand() % numOfVertices;
+                    tryAgain = true;
+
+                }
+            } while (tryAgain);                 // do skutku probuje na nowo wygenerowac krawedzi
+        }
+
+        /// po wstawieniu wszystkich "braków krawedzi" wstawiam losowe krawedzi
+        for(int x =0; x<numOfVertices; x++){
+            for(int y = 0; y<x; y++){
+
+                int randWeight = rand() % 100 + 1;
+
+                if(graph[x][y]!=0){                 //TODO: zmienic na infinity
+                    graph[x][y] = randWeight;
+                    graph[y][x] = randWeight;
+
+                    AdjNode *newNode1 = new AdjNode;                           // wstawiam do listy
+                    newNode1->weight = randWeight;
+                    newNode1->neighbour = x;
+                    newNode1->next = adjList[y];
+                    adjList[y] = newNode1;
+
+                    AdjNode *newNode2 = new AdjNode;                           // wstawiam do listy
+                    newNode2->weight = randWeight;
+                    newNode2->neighbour = y;
+                    newNode2->next = adjList[x];
+                    adjList[x] = newNode2;
+
+                    cout<<"\n Wstawiono V1: "<<x<<" V2:"<<y<<" waga:"<<randWeight;
+                }
+            }
+
+
+        }
+
+    }
+    else{
+
+        /// TWORZE STRUKTURY I WYPELNIAM JE PUSTYMI WARTOSCIAMI
+        for(int i =0; i < numOfVertices; i++){
+            graph[i] = new int [numOfVertices];             // Tworzenie dwuwymiarowej tablicy - dokladanie drugiego wymiaru
+            adjList[i] = NULL;
+            for(int j =0; j < numOfVertices; j++){
+                graph [i][j] = 0;                           // ustawiam w macierzy na brak relacji pomiedzy wierzcholkami
+            }
+        }
+
+        // generowanie grafu dla d<=0.5
+        for(int i=0; i<numOfEdges; i++){
+
+            int randWeight = rand() % 100 + 1;
+            int randV1 = rand() % numOfVertices;
+            int randV2 = rand() % numOfVertices;
+            bool tryAgain = false;
+
+            do {
+                tryAgain = false;
+                if (randV1 != randV2 && graph[randV1][randV2] == 0) {                    // losuje do czasu gdy wylosuja sie dwa rozne
+
+                    graph[randV1][randV2] = randWeight;         //wstawiam do macierzy
+
+
+
+                    AdjNode *newNode1 = new AdjNode;                           // wstawiam do listy
+                    newNode1->weight = randWeight;
+                    newNode1->neighbour = randV2;
+                    newNode1->next = adjList[randV1];
+                    adjList[randV1] = newNode1;
+
+                    cout<<"\n Wstawiono. V1: "<<randV1<<" V2:"<<randV2<<" waga:"<<randWeight;
+
+                } else {
+                    srand(time(NULL));
+                    randV1 = rand() % numOfVertices;
+                    randV2 = rand() % numOfVertices;
+                    tryAgain = true;
+
+                }
+            } while(tryAgain);                 // do skutku probuje na nowo wygenerowac krawedzi
+
+        }
 
     }
 
@@ -521,7 +642,7 @@ void ShortestPath::autoTest() {
 
     for(int i = 1; i<=2; i++){
         numOfVertices = i * 10;
-        double list[2] = {0.25, 0.5};        ///0.5, 0.75, 0.99
+        double list[2] = {0.25, 0.99};        ///0.5, 0.75, 0.99
         for(double elem : list){
 
             cout<<"\nStarting test numOfVertices = "<<numOfVertices<<", Density = "<<elem<<endl;
