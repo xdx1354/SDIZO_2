@@ -53,6 +53,8 @@ int main() {
 
 
     mst.autoTest();
+//mst.generateGraph(10, 0.6);
+
 //    int tmpEdges = 4;
 //    int tmpVertexes = 5;
 //

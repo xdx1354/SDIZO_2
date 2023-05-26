@@ -7,9 +7,63 @@ Number of Vertices = 10, Density = 0.25
 Not enough valid tests!Not enough valid tests!Not enough valid tests!Not enough valid tests!
 
 Testing with params:
+Number of Vertices = 10, Density = 0.5
+
+Prim (matrix) avg time: 11540480
+Prim (list) avg time: 11165730
+Kruskal (matrix) avg time: 11335960
+Kruskal (list) avg time: 11016010
+
+
+Testing with params:
+Number of Vertices = 10, Density = 0.75
+
+Prim (matrix) avg time: 11039780
+Prim (list) avg time: 10897720
+Kruskal (matrix) avg time: 11191850
+Kruskal (list) avg time: 11082060
+
+
+Testing with params:
+Number of Vertices = 10, Density = 0.99
+
+Prim (matrix) avg time: 10915690
+Prim (list) avg time: 11322680
+Kruskal (matrix) avg time: 11062380
+Kruskal (list) avg time: 10997900
+
+
+Testing with params:
 Number of Vertices = 20, Density = 0.25
 
-Prim (matrix) avg time: 23520760
-Prim (list) avg time: 27069370
-Kruskal (matrix) avg time: 23967660
-Kruskal (list) avg time: 24136230
+Prim (matrix) avg time: 23101420
+Prim (list) avg time: 19929060
+Kruskal (matrix) avg time: 17796030
+Kruskal (list) avg time: 17524110
+
+
+Testing with params:
+Number of Vertices = 20, Density = 0.5
+
+Prim (matrix) avg time: 17691750
+Prim (list) avg time: 18181940
+Kruskal (matrix) avg time: 17750710
+Kruskal (list) avg time: 18047410
+
+
+Testing with params:
+Number of Vertices = 20, Density = 0.75
+
+Prim (matrix) avg time: 17316940
+Prim (list) avg time: 16888520
+Kruskal (matrix) avg time: 16663440
+Kruskal (list) avg time: 16575780
+
+
+Testing with params:
+Number of Vertices = 20, Density = 0.99
+
+Prim (matrix) avg time: 16998990
+Prim (list) avg time: 16522060
+Kruskal (matrix) avg time: 16559840
+Kruskal (list) avg time: 17395430
