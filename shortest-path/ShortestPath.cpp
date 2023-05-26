@@ -232,15 +232,15 @@ void ShortestPath::generateGraph(int n, double d) {
             adjList[i] = NULL;
             for(int j =0; j < numOfVertices; j++){
                 if(i == j){
-                    graph[i][j] = 0;                        //TODO: zmenic na infinity
+                    graph[i][j] = 0;                       // ustawiam na przekotnej brak relaci by wykluczyc petle
                 }
                 else{
-                    graph [i][j] = -1;                           // ustawiam w macierzy na brak relacji pomiedzy wierzcholkami
+                    graph [i][j] = -1;                           // ustawiam resztę pol macierzy na -1, by odróżnić je od braku relacji (infinity)
                 }
             }
         }
 
-        /// LOSUJE PUSTE KRAWEDZI I WSTAWIAM TAM 0
+        /// LOSUJE "PUSTE KRAWEDZI" I WSTAWIAM TAM INFINITY
         cout<<maxEdges <<" "<< numOfEdges;
         for(int i = 0; i < maxEdges-numOfEdges; i++) {
             int randV1 = rand() % numOfVertices;
@@ -266,13 +266,13 @@ void ShortestPath::generateGraph(int n, double d) {
         }
 
         /// po wstawieniu wszystkich "braków krawedzi" wstawiam losowe krawedzi
-        for(int x =0; x<numOfVertices; x++){
-            for(int y = 0; y<x; y++){
+        for(int x = 0; x<numOfVertices; x++){
+            for(int y = 0; y<=numOfVertices; y++){
 
                 int randWeight = rand() % 100 + 1;
 
-                if(graph[x][y]!=0){                 //TODO: zmienic na infinity
-                    graph[x][y] = randWeight;
+                if(graph[x][y] != 0){         // jesli dana krawedz nie jest okreslona jako pusta
+                    graph[x][y] = randWeight;                                   // to tworzę tą relację
                     graph[y][x] = randWeight;
 
                     AdjNode *newNode1 = new AdjNode;                           // wstawiam do listy
@@ -481,17 +481,17 @@ void ShortestPath::dijkstraMatrix(int startingV) {
 
     // Wyświetlenie najkrótszych ścieżek
     for (int i = 0; i < numOfVertices; ++i) {
-        std::cout << "Shortest path from: " << startingV << " to: " << i << ": ";
+        cout << "Shortest path from: " << startingV << " to: " << i << ": ";
         if (distance[i] == std::numeric_limits<long long>::max()) {
-            std::cout << "NO PATH" << std::endl;
+            std::cout << "NO PATH" << endl;
         } else {
-            std::cout << distance[i] << " (previous: ";
+            cout << distance[i] << " (previous: ";
             int current = i;
             while (current != -1) {
                 std::cout << current << " ";
                 current = prev[current];
             }
-            std::cout << ")" << std::endl;
+            cout << ")" << endl;
         }
     }
     cout<<"\n\n";
@@ -609,27 +609,6 @@ void ShortestPath::bellmanFordList(int startingV) {
 
 
 /// UTIL FUNCTIONS
-
-void ShortestPath::printPath(int startingV) {
-
-    int *S, stackCounter;
-
-    S = new int[numOfVertices];
-    stackCounter = 0;
-
-    cout<<"Shortest paths from vertex "<<startingV<<endl;
-
-    for(int i = 0; i<numOfVertices; i++){
-        cout<< i <<": ";
-        for(int j = i; j > -1; j=prev[j]){              // przechodze przez tablice poprzedników i dodaje
-            S[stackCounter++] = j;                             // kolejne wierzchołki na stos
-        }
-        while (stackCounter){                                  // zdejmuje wierzchołki ze stosu w odwrotnej kolejności
-            cout<< S[--stackCounter]<<" ";
-        }
-        cout<< "$"<< distance[i] << endl;
-    }
-}
 
 void ShortestPath::autoTest() {
     string path = R"(D:\PWR\4 sem\SDIZO\Projekt2\tests\tests2.txt)";
