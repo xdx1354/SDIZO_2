@@ -7,10 +7,8 @@ ale w reszcie należy to uwzględnić.
 
 
 TODO:
-    - krawedzie dla SCIEZKi maja byc skierowane (generowanie z pliku)
-    - menu SHORTEST PATH
-    - testowanie
     - porzadek w kodzie
-    - nieistniejace krawedzi powinny być INFINITY
-    - BELLMAN-FORD, dla nieistniejacej sciezki ma byc NOPATH jak w dijkstrze
-    - dodać nowe generowanie grafow w Shortest Path z uwzględnieniem tego, że jest to graf skierowany
+    - nieistniejace krawedzi powinny być INFINITY [int a = std::numeric_limits<int>::infinity();]
+    - shortest path nie działa poprawnie, inne wyniki dla bellmana forda i Dijkstry [INFINITY]
+    - generoanie grafu też nie działa dobrze n = 5, d = 0.6 [INFINITY]
+    - nie ma sprawdzania czy graf został wygenerowany. Chyba trzeba to owinąć w try{} catch{} block

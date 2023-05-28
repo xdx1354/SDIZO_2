@@ -51,7 +51,8 @@ int main() {
         }
     }
 
-    sp.autoTest();
+//    sp.autoTest();
+//    mst.autoTest();
 //    mst.autoTest();
 //mst.generateGraph(10, 0.6);
 

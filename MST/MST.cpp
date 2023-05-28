@@ -601,15 +601,16 @@ void MST::autoTest() {
     int numOfTests = 10;
     cout<<"Starting test of MST";
     fout<<"----Test of MST----\n";
-
-    for(int i = 1; i<=2; i++){
+    fout<<"Prim Matrix "<<"Prim List "<<"Kruskal Matrix "<<"Kruskal list\n";
+    for(int i = 2; i <= 10; i = i+2){
         numOfVertices = i * 10;
-        double list[4] = {0.25, 0.5, 0.75, 0.99};        ///0.5, 0.75, 0.99
+        double list[4] = {0.25, 0.5, 0.75, 0.99};        ///
         for(double elem : list){
 
             cout<<"\nStarting test numOfVertices = "<<numOfVertices<<", Density = "<<elem<<endl;
             fout<<"\n\nTesting with params:\nNumber of Vertices = " << numOfVertices;
             fout<<", Density = "<<elem<<"\n\n";
+            fout<<"Prim_Matrix "<<"Prim_List "<<"Kruskal_Matrix "<<"Kruskal_list\n";
             generateGraph(numOfVertices, elem);                //gerowanie grafu o konkretnych parametrach
 
             int validTests = 0;
@@ -627,7 +628,8 @@ void MST::autoTest() {
 
             }
             if(validTests == numOfTests){
-                fout<<"Prim (matrix) avg time: " << tempTime<<endl;
+                //fout<<"Prim (matrix) avg time: " << tempTime<<endl;
+                fout<<tempTime<<" ";
                 cout<<"Prim (matrix) avg time: " << tempTime;
             }
             else{
@@ -650,7 +652,8 @@ void MST::autoTest() {
 
             }
             if(validTests == numOfTests){
-                fout<<"Prim (list) avg time: " << tempTime<<endl;
+//                fout<<"Prim (list) avg time: " << tempTime<<endl;
+                fout<<tempTime<<" ";
                 cout<<"Prim (list) avg time: " << tempTime;
             }
             else{
@@ -673,7 +676,8 @@ void MST::autoTest() {
 
             }
             if(validTests == numOfTests){
-                fout<<"Kruskal (matrix) avg time: " << tempTime<<endl;
+//                fout<<"Kruskal (matrix) avg time: " << tempTime<<endl;
+                fout<<tempTime<<" ";
                 cout<<"Kruskal (matrix) avg time: " << tempTime;
             }
             else{
@@ -697,7 +701,8 @@ void MST::autoTest() {
 
             }
             if(validTests == numOfTests){
-                fout<<"Kruskal (list) avg time: " << tempTime<<endl;
+                fout<<tempTime<<endl;
+//                fout<<"Kruskal (list) avg time: " << tempTime<<endl;
             }
             else{
                 fout<<"Not enough valid tests!";
