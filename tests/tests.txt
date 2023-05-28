@@ -1,37 +1,142 @@
-----Test of Shortest Path----
-
-
-Testing with params:
-Number of Vertices = 10, Density = 0.25
-
-Dijkstra (matrix) avg myTime: 17408390
-Dijkstra (list) avg myTime: 17706760
-Bellman-Ford (matrix) avg myTime: 18969140
-Bellman-Ford (list) avg myTime: 18156060
-
-
-Testing with params:
-Number of Vertices = 10, Density = 0.5
-
-Dijkstra (matrix) avg myTime: 19301250
-Dijkstra (list) avg myTime: 21206850
-Bellman-Ford (matrix) avg myTime: 18258050
-Bellman-Ford (list) avg myTime: 18889940
+----Test of MST----
+Prim Matrix Prim List Kruskal Matrix Kruskal list
 
 
 Testing with params:
 Number of Vertices = 20, Density = 0.25
 
-Dijkstra (matrix) avg myTime: 38838790
-Dijkstra (list) avg myTime: 41265460
-Bellman-Ford (matrix) avg myTime: 35160230
-Bellman-Ford (list) avg myTime: 41679360
+Prim_Matrix Prim_List Kruskal_Matrix Kruskal_list
+15377800 15082260 15256830 15215420
 
 
 Testing with params:
 Number of Vertices = 20, Density = 0.5
 
-Dijkstra (matrix) avg myTime: 44278670
-Dijkstra (list) avg myTime: 40369170
-Bellman-Ford (matrix) avg myTime: 36346630
-Bellman-Ford (list) avg myTime: 39391250
+Prim_Matrix Prim_List Kruskal_Matrix Kruskal_list
+14659100 14732660 14613210 14863880
+
+
+Testing with params:
+Number of Vertices = 20, Density = 0.75
+
+Prim_Matrix Prim_List Kruskal_Matrix Kruskal_list
+14616320 14757700 14518030 14810580
+
+
+Testing with params:
+Number of Vertices = 20, Density = 0.99
+
+Prim_Matrix Prim_List Kruskal_Matrix Kruskal_list
+14739340 14345600 14622400 14212140
+
+
+Testing with params:
+Number of Vertices = 40, Density = 0.25
+
+Prim_Matrix Prim_List Kruskal_Matrix Kruskal_list
+31655170 31737370 31853500 31214200
+
+
+Testing with params:
+Number of Vertices = 40, Density = 0.5
+
+Prim_Matrix Prim_List Kruskal_Matrix Kruskal_list
+31159310 31297510 31219340 31962570
+
+
+Testing with params:
+Number of Vertices = 40, Density = 0.75
+
+Prim_Matrix Prim_List Kruskal_Matrix Kruskal_list
+30278820 31341760 30044930 30688810
+
+
+Testing with params:
+Number of Vertices = 40, Density = 0.99
+
+Prim_Matrix Prim_List Kruskal_Matrix Kruskal_list
+29731620 30568540 29776890 30675110
+
+
+Testing with params:
+Number of Vertices = 60, Density = 0.25
+
+Prim_Matrix Prim_List Kruskal_Matrix Kruskal_list
+46860340 47864600 47463610 47729620
+
+
+Testing with params:
+Number of Vertices = 60, Density = 0.5
+
+Prim_Matrix Prim_List Kruskal_Matrix Kruskal_list
+47686420 47247120 47983720 49350860
+
+
+Testing with params:
+Number of Vertices = 60, Density = 0.75
+
+Prim_Matrix Prim_List Kruskal_Matrix Kruskal_list
+47252680 50734390 46874450 51489810
+
+
+Testing with params:
+Number of Vertices = 60, Density = 0.99
+
+Prim_Matrix Prim_List Kruskal_Matrix Kruskal_list
+47262240 54426890 48362680 55574830
+
+
+Testing with params:
+Number of Vertices = 80, Density = 0.25
+
+Prim_Matrix Prim_List Kruskal_Matrix Kruskal_list
+64283560 65307930 62100640 63540770
+
+
+Testing with params:
+Number of Vertices = 80, Density = 0.5
+
+Prim_Matrix Prim_List Kruskal_Matrix Kruskal_list
+64096950 68771200 63101660 70122920
+
+
+Testing with params:
+Number of Vertices = 80, Density = 0.75
+
+Prim_Matrix Prim_List Kruskal_Matrix Kruskal_list
+67354370 81222030 65804040 82343050
+
+
+Testing with params:
+Number of Vertices = 80, Density = 0.99
+
+Prim_Matrix Prim_List Kruskal_Matrix Kruskal_list
+71334690 101642490 71348450 102302980
+
+
+Testing with params:
+Number of Vertices = 100, Density = 0.25
+
+Prim_Matrix Prim_List Kruskal_Matrix Kruskal_list
+78251040 81879330 78584530 83208200
+
+
+Testing with params:
+Number of Vertices = 100, Density = 0.5
+
+Prim_Matrix Prim_List Kruskal_Matrix Kruskal_list
+83889710 99787350 83549270 99820210
+
+
+Testing with params:
+Number of Vertices = 100, Density = 0.75
+
+Prim_Matrix Prim_List Kruskal_Matrix Kruskal_list
+98619220 137209070 90473820 134390620
+
+
+Testing with params:
+Number of Vertices = 100, Density = 0.99
+
+Prim_Matrix Prim_List Kruskal_Matrix Kruskal_list
+99650840 181228370 99638870 181226060

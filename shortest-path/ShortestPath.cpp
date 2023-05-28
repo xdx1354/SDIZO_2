@@ -240,6 +240,9 @@ void ShortestPath::generateGraph(int n, double d) {
             }
         }
 
+        //cout<<"Po wstawieniu -1: ";
+        //printMatrix();
+
         /// LOSUJE "PUSTE KRAWEDZI" I WSTAWIAM TAM INFINITY
         cout<<maxEdges <<" "<< numOfEdges;
         for(int i = 0; i < maxEdges-numOfEdges; i++) {
@@ -265,27 +268,24 @@ void ShortestPath::generateGraph(int n, double d) {
             } while (tryAgain);                 // do skutku probuje na nowo wygenerowac krawedzi
         }
 
+        //cout<<"Po wstawieniu zer: ";
+        //printMatrix();
+
         /// po wstawieniu wszystkich "braków krawedzi" wstawiam losowe krawedzi
         for(int x = 0; x<numOfVertices; x++){
-            for(int y = 0; y<=numOfVertices; y++){
+            for(int y = 0; y<numOfVertices; y++){
 
                 int randWeight = rand() % 100 + 1;
 
                 if(graph[x][y] != 0){         // jesli dana krawedz nie jest okreslona jako pusta
                     graph[x][y] = randWeight;                                   // to tworzę tą relację
-                    graph[y][x] = randWeight;
 
                     AdjNode *newNode1 = new AdjNode;                           // wstawiam do listy
                     newNode1->weight = randWeight;
-                    newNode1->neighbour = x;
-                    newNode1->next = adjList[y];
-                    adjList[y] = newNode1;
+                    newNode1->neighbour = y;
+                    newNode1->next = adjList[x];
+                    adjList[x] = newNode1;
 
-                    AdjNode *newNode2 = new AdjNode;                           // wstawiam do listy
-                    newNode2->weight = randWeight;
-                    newNode2->neighbour = y;
-                    newNode2->next = adjList[x];
-                    adjList[x] = newNode2;
 
                     cout<<"\n Wstawiono V1: "<<x<<" V2:"<<y<<" waga:"<<randWeight;
                 }
@@ -389,7 +389,7 @@ void ShortestPath::dijkstraList(int startingV) {
     bool* QS = new bool[numOfVertices];
 
     for (int i = 0; i < numOfVertices; ++i) {
-        distance[i] = std::numeric_limits<long long>::max();
+        distance[i] = 99999999999999;
         prev[i] = -1;
         QS[i] = false;
     }
@@ -424,7 +424,7 @@ void ShortestPath::dijkstraList(int startingV) {
     cout<<endl<<endl;
     for (int i = 0; i < numOfVertices; ++i) {
         std::cout << "Shortest path from: " << startingV << " to: " << i << ": ";
-        if (distance[i] == std::numeric_limits<long long>::max()) {
+        if (distance[i] == 99999999999999) {
             std::cout << "NO PATH" << std::endl;
         } else {
             std::cout << distance[i] << " (previous: ";
@@ -452,7 +452,7 @@ void ShortestPath::dijkstraMatrix(int startingV) {
     bool* QS = new bool[numOfVertices];
 
     for (int i = 0; i < numOfVertices; ++i) {
-        distance[i] = std::numeric_limits<long long>::max();
+        distance[i] = 99999999999999;
         prev[i] = -1;
         QS[i] = false;
     }
@@ -482,7 +482,7 @@ void ShortestPath::dijkstraMatrix(int startingV) {
     // Wyświetlenie najkrótszych ścieżek
     for (int i = 0; i < numOfVertices; ++i) {
         cout << "Shortest path from: " << startingV << " to: " << i << ": ";
-        if (distance[i] == std::numeric_limits<long long>::max()) {
+        if (distance[i] == 99999999999999) {
             std::cout << "NO PATH" << endl;
         } else {
             cout << distance[i] << " (previous: ";
@@ -508,7 +508,7 @@ void ShortestPath::bellmanFordMatrix(int startingV) {
     int* prev = new int[numOfVertices];
 
     for (int i = 0; i < numOfVertices; ++i) {
-        distance[i] = 9999999;
+        distance[i] = 99999999999999;
         prev[i] = -1;
     }
 
@@ -532,7 +532,7 @@ void ShortestPath::bellmanFordMatrix(int startingV) {
 
     for (int i = 0; i < numOfVertices; ++i) {
         std::cout << "Shortest path from: " << startingV << " to: " << i << ": ";
-        if (distance[i] == 9999999) {
+        if (distance[i] == 99999999999999) {
             std::cout << "NO PATH" << std::endl;
         } else {
             std::cout << distance[i] << " (previous: ";
@@ -557,7 +557,7 @@ void ShortestPath::bellmanFordList(int startingV) {
     cout<<endl<<"Bellman-Ford algoritm (list)\n";
 
     for (int i = 0; i < numOfVertices; ++i) {
-        distance[i] = 9999999;
+        distance[i] = 99999999999999;
         prev[i] = -1;
     }
 
@@ -587,7 +587,7 @@ void ShortestPath::bellmanFordList(int startingV) {
 
     for (int i = 0; i < numOfVertices; ++i) {
         std::cout << "Shortest path from: " << startingV << " to: " << i << ": ";
-        if (distance[i] == 9999999) {
+        if (distance[i] == 99999999999999) {
             std::cout << "NO PATH" << std::endl;
         } else {
             std::cout << distance[i] << " (previous: ";
@@ -618,10 +618,11 @@ void ShortestPath::autoTest() {
     int numOfTests = 10;
     cout<<"Starting test of Shortest Path";
     fout<<"----Test of Shortest Path----\n";
+    fout<<"Dijkstra_matrix Dijkstra_list BF_matrix BF_list\n";
 
-    for(int i = 1; i<=2; i++){
+    for(int i = 2; i<=10; i = i+2){
         numOfVertices = i * 10;
-        double list[2] = {0.25, 0.99};        ///0.5, 0.75, 0.99
+        double list[4] = {0.25, 0.5, 0.75,0.99};        ///0.5, 0.75, 0.99
         for(double elem : list){
 
             cout<<"\nStarting test numOfVertices = "<<numOfVertices<<", Density = "<<elem<<endl;
@@ -640,7 +641,8 @@ void ShortestPath::autoTest() {
                 tempTime+= myTime.returnTime() / numOfTests;
 
             }
-            fout<<"Dijkstra (matrix) avg myTime: " << tempTime<<endl;
+//            fout<<"Dijkstra (matrix) avg myTime: " << tempTime<<endl;
+            fout<<tempTime<<" ";
             cout<<"Dijkstra (matrix) avg myTime: " << tempTime<<endl;
 
 
@@ -656,7 +658,8 @@ void ShortestPath::autoTest() {
                 tempTime+= myTime.returnTime() / numOfTests;
 
             }
-            fout<<"Dijkstra (list) avg myTime: " << tempTime<<endl;
+//            fout<<"Dijkstra (list) avg myTime: " << tempTime<<endl;
+            fout<<tempTime<<" ";
             cout<<"Dijkstra (list) avg myTime: " << tempTime<<endl;
 
             tempTime = 0;
@@ -670,7 +673,8 @@ void ShortestPath::autoTest() {
                 tempTime+= myTime.returnTime() / numOfTests;
 
             }
-            fout<<"Bellman-Ford (matrix) avg myTime: " << tempTime<<endl;
+//            fout<<"Bellman-Ford (matrix) avg myTime: " << tempTime<<endl;
+            fout<<tempTime<<" ";
             cout<<"Bellman-Ford (matrix) avg myTime: " << tempTime<<endl;
 
 
@@ -685,8 +689,10 @@ void ShortestPath::autoTest() {
                 tempTime+= myTime.returnTime() / numOfTests;
 
             }
-            fout<<"Bellman-Ford (list) avg myTime: " << tempTime<<endl;
+//            fout<<"Bellman-Ford (list) avg myTime: " << tempTime<<endl;
+            fout<<tempTime<<endl;
             cout<<"Bellman-Ford (list) avg myTime: " << tempTime<<endl;
+
 
         }
 

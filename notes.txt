@@ -9,5 +9,6 @@ ale w reszcie należy to uwzględnić.
 TODO:
     - porzadek w kodzie
     - nieistniejace krawedzi powinny być INFINITY [int a = std::numeric_limits<int>::infinity();]
-    - shortest path nie działa poprawnie, inne wyniki dla bellmana forda i Dijkstry
-    - generoanie grafu też nie działa dobrze n = 5, d = 0.6
+    - shortest path nie działa poprawnie, inne wyniki dla bellmana forda i Dijkstry [INFINITY]
+    - generoanie grafu też nie działa dobrze n = 5, d = 0.6 [INFINITY]
+    - nie ma sprawdzania czy graf został wygenerowany. Chyba trzeba to owinąć w try{} catch{} block
